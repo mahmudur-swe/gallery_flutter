@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_dimens.dart';
 import '../../../core/services/permission_service.dart';
 import '../../../core/util/log.dart';
+import '../../../di/injection_container.dart';
 import '../../routes/router.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -16,7 +17,7 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => SplashBloc(PermissionService())..add(SplashCheckPermission()),
+      create: (_) => sl<SplashBloc>()..add(SplashCheckPermission()),
       child: BlocListener<SplashBloc, SplashState>(
         listener: (context, state) {
           if (state.isGranted == true) {

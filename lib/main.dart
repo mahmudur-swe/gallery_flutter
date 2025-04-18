@@ -4,7 +4,13 @@ import 'package:gallery_flutter/presentation/modules/permission/permission_scree
 import 'package:gallery_flutter/presentation/modules/splash/splash_screen.dart';
 import 'package:gallery_flutter/presentation/routes/router.dart';
 
-void main() {
+import 'di/injection_container.dart';
+
+void main() async {
+
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await initDI();
   runApp(const MyApp());
 }
 

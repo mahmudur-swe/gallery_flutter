@@ -2,17 +2,20 @@
 
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gallery_flutter/di/injection_container.dart';
 import 'package:gallery_flutter/domain/entities/photo.dart';
 import 'package:gallery_flutter/presentation/modules/photos/photo_bloc.dart';
 import 'package:gallery_flutter/presentation/modules/photos/photo_screen.dart';
 import 'package:gallery_flutter/presentation/modules/photos/photo_state.dart';
 import 'package:mocktail/mocktail.dart';
 
-class MockPhotoBloc extends Mock implements PhotoBloc {}
+class MockPhotoBloc extends Mock implements PhotoBloc {
+
+
+}
 
 class _TestHttpOverrides extends HttpOverrides {}
 
@@ -31,7 +34,15 @@ void main() {
 
   setUp(() {
     mockBloc = MockPhotoBloc();
+    sl.registerFactory<PhotoBloc>(() => mockBloc);
+    when(() => mockBloc.close()).thenAnswer((_) async {});
   });
+
+  tearDown(() {
+    sl.unregister<PhotoBloc>();
+  });
+
+
 
   Widget createTestableWidget() {
     return MaterialApp(

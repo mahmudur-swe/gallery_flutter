@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gallery_flutter/data/repositories/photo_repository_impl.dart';
 import 'package:gallery_flutter/presentation/modules/permission/permission_bloc.dart';
 import 'package:gallery_flutter/presentation/modules/permission/permission_screen.dart';
 import 'package:gallery_flutter/presentation/modules/photos/photo_bloc.dart';
@@ -36,6 +37,7 @@ final GoRouter appRouter = GoRouter(
       builder: (BuildContext context, GoRouterState state) {
 
         return BlocProvider(
+          // todo: will be update when dependency injection is implemented
           create: (_) => PermissionBloc(PermissionService()),
           child: PermissionScreen(),
         );
@@ -46,7 +48,8 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutes.photos,
       builder: (BuildContext context, GoRouterState state) {
         return BlocProvider(
-          create: (_) => PhotoBloc(GetPhotosUseCase())..add(LoadPhotos()),
+          // todo: will be update when dependency injection is implemented
+          create: (_) => PhotoBloc(GetPhotosUseCase(PhotoRepositoryImpl()))..add(LoadPhotos()),
           child: PhotoScreen(),
         );
       },

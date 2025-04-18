@@ -11,7 +11,7 @@ class PhotoBloc extends Bloc<PhotoEvent, PhotoState> {
   PhotoBloc(this.getPhotosUseCase) : super(PhotoState()) {
     on<LoadPhotos>((event, emit) async {
       emit(state.copyWith(isLoading: true, errorMessage: null));
-      await Future.delayed(const Duration(seconds: 3));
+      await Future.delayed(const Duration(seconds: 1));
       try {
         final photos = await getPhotosUseCase.execute();
         emit(

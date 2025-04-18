@@ -22,14 +22,15 @@ import Photos
                 self.getPhotos(result: result)
             case "getThumbnailBytes":
                 guard let args = call.arguments as? [String: Any],
-                    let assetId = args["uri"] as? String
+                    let assetId = args["uri"] as? String,
+                    let resolution = args["resolution"] as? String
                 else {
                     result(
                         FlutterError(code: "INVALID_ARGS", message: "Missing assetId", details: nil)
                     )
                     return
                 }
-                getThumbnailFromFilePath(assetId: assetId, result: result)
+                getThumbnailFromFilePath(assetId: assetId, resolution: resolution, result: result)
 
             default:
                 result(FlutterMethodNotImplemented)
@@ -95,8 +96,18 @@ import Photos
 }
 
 
-func getThumbnailFromFilePath(assetId: String, result: @escaping FlutterResult) {
+func getThumbnailFromFilePath(assetId: String, resolution: String, result: @escaping FlutterResult) {
     let fileURL = URL(fileURLWithPath: assetId)
+
+    let targetSize = if (resolution == "low") {
+        CGSize(width: 25, height: 25)
+    } else if(resolution == "high") {
+        CGSize(width: 300, height: 300)
+    } else {
+        CGSize(width: 100, height: 100)
+    }
+
+
 
     do {
         // Read the image data from the file
@@ -105,7 +116,6 @@ func getThumbnailFromFilePath(assetId: String, result: @escaping FlutterResult) 
         // Convert the data into a UIImage
         if let image = UIImage(data: data) {
             // Resize the image to 100x100
-            let targetSize = CGSize(width: 100, height: 100)
             let resizedImage = resizeImage(image: image, targetSize: targetSize)
 
             // Convert the resized image to PNG data

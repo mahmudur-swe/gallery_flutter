@@ -8,7 +8,6 @@ import 'package:gallery_flutter/presentation/modules/permission/permission_state
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../../../di/injection_container.dart';
 import '../../routes/router.dart';
 
 class PermissionScreen extends StatefulWidget {
@@ -44,83 +43,78 @@ class _PermissionScreenState extends State<PermissionScreen>
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => sl<PermissionBloc>()..add(CheckPermission()),
-      child: BlocConsumer<PermissionBloc, PermissionState>(
-        listener: (context, state) {
-          if (state is PermissionPermanentlyDenied) {
-            showDialog(
-              context: context,
-              builder:
-                  (_) => AlertDialog(
-                    title: const Text("Permission Required"),
-                    content: Text(
-                      "Permission is permanently denied. Please open settings to allow access.",
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodyMedium?.copyWith(color: Colors.black38),
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text("Cancel"),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          openAppSettings(); // opens system settings
-                          Navigator.pop(context);
-                        },
-                        child: const Text("Open Settings"),
-                      ),
-                    ],
+    return BlocConsumer<PermissionBloc, PermissionState>(
+      listener: (context, state) {
+        if (state is PermissionPermanentlyDenied) {
+          showDialog(
+            context: context,
+            builder:
+                (_) => AlertDialog(
+                  title: const Text("Permission Required"),
+                  content: Text(
+                    "Permission is permanently denied. Please open settings to allow access.",
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(color: Colors.black38),
                   ),
-            );
-          } else if (state is PermissionGranted) {
-            context.go(AppRoutes.photos);
-          }
-        },
-        builder: (context, state) {
-          return Scaffold(
-            body: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(AppDimens.padding40),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset(
-                      'assets/images/ic_photos.svg',
-                      width: AppDimens.dimen123,
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text("Cancel"),
                     ),
-                    const SizedBox(height: AppDimens.space42),
-                    Text(
-                      'Require Permission',
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                    const SizedBox(height: AppDimens.space8),
-                    Text(
-                      'To show your black and white photos.\nWe just need your folder permission.\nWe promise, we don’t take your photos.',
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                    const SizedBox(height: AppDimens.space42),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          context.read<PermissionBloc>().add(
-                            RequestPermission(),
-                          );
-                        },
-                        child: const Text("Grant Access"),
-                      ),
+                    TextButton(
+                      onPressed: () {
+                        openAppSettings(); // opens system settings
+                        Navigator.pop(context);
+                      },
+                      child: const Text("Open Settings"),
                     ),
                   ],
                 ),
+          );
+        } else if (state is PermissionGranted) {
+          context.go(AppRoutes.photos);
+        }
+      },
+      builder: (context, state) {
+        return Scaffold(
+          body: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(AppDimens.padding40),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(
+                    'assets/images/ic_photos.svg',
+                    width: AppDimens.dimen123,
+                  ),
+                  const SizedBox(height: AppDimens.space42),
+                  Text(
+                    'Require Permission',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                  const SizedBox(height: AppDimens.space8),
+                  Text(
+                    'To show your black and white photos.\nWe just need your folder permission.\nWe promise, we don’t take your photos.',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                  const SizedBox(height: AppDimens.space42),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        context.read<PermissionBloc>().add(RequestPermission());
+                      },
+                      child: const Text("Grant Access"),
+                    ),
+                  ),
+                ],
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

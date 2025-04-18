@@ -38,7 +38,10 @@ class MainActivity : FlutterActivity(){
 
             } else if (call.method == GET_THUMBNAIL_BYTES_METHOD) {
                 val uri = call.argument<String>("uri") ?: ""
-                val bytes = getThumbnailBytes(this, uri)
+
+                val resolution = call.argument<String>("resolution") ?: "high"
+
+                val bytes = getThumbnailBytes(this, uri, resolution)
                 if (bytes != null) {
                     result.success(bytes)
                 } else {
@@ -90,23 +93,47 @@ fun getPhotos(
     return mediaList
 }
 
-
-private fun getThumbnailBytes(context: Context, uriString: String): ByteArray? {
+private fun getFullImageBytes(context: Context, uriString: String): ByteArray? {
     return try {
+        val uri = uriString.toUri()
+        context.contentResolver.openInputStream(uri)?.use { input ->
+            input.readBytes() // ✅ full resolution
+        }
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
+    }
+}
+
+
+private fun getThumbnailBytes(context: Context, uriString: String, resolution: String): ByteArray? {
+    return try {
+
+        val targetSize = when (resolution) {
+            "low" -> Size(25, 25)
+            "high" -> Size(300, 300)
+            else -> Size(100, 100)
+        }
+
+        val quality = when (resolution) {
+            "low" -> 40
+            "high" -> 90
+            else -> 80
+        }
 
         val uri = uriString.toUri()
 
         val bitmap = when {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q -> {
-                context.contentResolver.loadThumbnail(uri, Size(200, 200), null)
+                context.contentResolver.loadThumbnail(uri, targetSize, null)
             }
             else -> {
-                decodeThumbnail(context, uri, 200, 200)
+                decodeThumbnail(context, uri, targetSize.width, targetSize.height)
             }
         }
 
         val stream = ByteArrayOutputStream()
-        bitmap?.compress(Bitmap.CompressFormat.JPEG, 70, stream)
+        bitmap?.compress(Bitmap.CompressFormat.JPEG, quality, stream)
         stream.toByteArray()
     } catch (e: Exception) {
         null

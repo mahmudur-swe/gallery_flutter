@@ -7,8 +7,12 @@ import '../../core/constants/method_channel_constants.dart';
 
 class PhotoLocalDataSource {
 
+  final PhotoService _photoService;
+
+  PhotoLocalDataSource(this._photoService);
+
   Future<List<PhotoModel>> fetchPhotos() async {
-    final mediaList = await PhotoService.fetchPhotos();
+    final mediaList = await _photoService.fetchPhotos();
     return mediaList.map((e) => PhotoModel.fromMap(e)).toList();
   }
 }

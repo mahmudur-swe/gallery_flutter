@@ -10,25 +10,28 @@ import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../core/services/photo_services.dart';
+import '../../../core/services/thumbnail_processor.dart';
 import '../../../core/util/utils.dart';
 import '../../../di/injection_container.dart';
+import '../../widgets/ProgressiveImage.dart';
 
 //  WidgetsBinding.instance.addPostFrameCallback((_) {
 //       context.read<PhotoBloc>().add(LoadPhotos(albumId));
 //     });
 
 class PhotoScreen extends StatelessWidget {
-  const PhotoScreen({super.key});
+
+  final ThumbnailProcessor thumbnailProcessor;
+
+  const PhotoScreen({super.key, required this.thumbnailProcessor});
+
 
   @override
   Widget build(BuildContext context) {
     // final args =
     //     ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
-    return BlocProvider(
-      // bloc injected by dependency injection
-      create: (_) => sl<PhotoBloc>()..add(LoadPhotos()),
-      child: BlocConsumer<PhotoBloc, PhotoState>(
+    return BlocConsumer<PhotoBloc, PhotoState>(
         listener: (context, state) {
           if (state.errorMessage != null) {
             ScaffoldMessenger.of(
@@ -89,8 +92,12 @@ class PhotoScreen extends StatelessWidget {
                     final photo = state.photos[index];
                     final uri = photo.uri; // 🔁 Adjust if structure changes
 
-                    return FutureBuilder<Uint8List?>(
-                      future: PhotoService.getThumbnailImageBytes(uri),
+                    return ProgressiveImage(uri: uri, thumbnailProcessor: thumbnailProcessor);
+
+                    /*FutureBuilder<Uint8List?>(
+
+                      future: thumbnailCacheManager.loadThumbnail(uri),
+
                       builder: (context, snapshot) {
                         if (snapshot.connectionState != ConnectionState.done) {
                           return Shimmer.fromColors(
@@ -113,7 +120,7 @@ class PhotoScreen extends StatelessWidget {
                           return const Icon(Icons.broken_image);
                         }
                       },
-                    );
+                    );*/
 
                     // return ClipRRect(
                     //   borderRadius: BorderRadius.circular(AppDimens.radius6),
@@ -129,7 +136,6 @@ class PhotoScreen extends StatelessWidget {
             ),
           );
         },
-      ),
     );
   }
 }

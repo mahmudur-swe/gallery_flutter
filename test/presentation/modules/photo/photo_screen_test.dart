@@ -1,10 +1,12 @@
 
 
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:gallery_flutter/core/services/thumbnail_processor.dart';
 import 'package:gallery_flutter/di/injection_container.dart';
 import 'package:gallery_flutter/domain/entities/photo.dart';
 import 'package:gallery_flutter/presentation/modules/photos/photo_bloc.dart';
@@ -14,8 +16,9 @@ import 'package:mocktail/mocktail.dart';
 
 class MockPhotoBloc extends Mock implements PhotoBloc {
 
-
 }
+
+class MockThumbnailProcessor extends Mock implements ThumbnailProcessor {}
 
 class _TestHttpOverrides extends HttpOverrides {}
 
@@ -26,6 +29,7 @@ final mockPhotos = [
 
 void main() {
   late MockPhotoBloc mockBloc;
+  late MockThumbnailProcessor mockProcessor;
 
   // todo: remove this when data fetching is implemented
   setUpAll(() {
@@ -34,12 +38,7 @@ void main() {
 
   setUp(() {
     mockBloc = MockPhotoBloc();
-    sl.registerFactory<PhotoBloc>(() => mockBloc);
-    when(() => mockBloc.close()).thenAnswer((_) async {});
-  });
-
-  tearDown(() {
-    sl.unregister<PhotoBloc>();
+    mockProcessor = MockThumbnailProcessor();
   });
 
 
@@ -48,7 +47,7 @@ void main() {
     return MaterialApp(
       home: BlocProvider<PhotoBloc>.value(
         value: mockBloc,
-        child: const PhotoScreen(),
+        child:  PhotoScreen(thumbnailProcessor: mockProcessor),
       ),
     );
   }
@@ -56,6 +55,7 @@ void main() {
   testWidgets('shows loading indicator when isLoading is true', (tester) async {
     when(() => mockBloc.state).thenReturn(PhotoState(isLoading: true));
     when(() => mockBloc.stream).thenAnswer((_) => Stream.value(PhotoState(isLoading: true)));
+
 
     await tester.pumpWidget(createTestableWidget());
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
@@ -73,15 +73,22 @@ void main() {
     when(() => mockBloc.state).thenReturn(PhotoState(photos: mockPhotos));
     when(() => mockBloc.stream).thenAnswer((_) => Stream.value(PhotoState(photos: mockPhotos)));
 
+    when(() => mockProcessor.loadThumbnail(any(), resolution: ThumbnailResolution.low))
+        .thenAnswer((_) async => Uint8List.fromList([0, 0, 0]));
+
+    when(() => mockProcessor.loadThumbnail(any(), resolution: ThumbnailResolution.high))
+        .thenAnswer((_) async => Uint8List.fromList([0, 0, 0]));
+
+
     await tester.pumpWidget(createTestableWidget());
     await tester.pumpAndSettle();
 
     expect(find.byType(GridView), findsOneWidget);
 
     for (final photo in mockPhotos) {
-      expect(find.byKey(ValueKey(photo.id)), findsOneWidget);
+      expect(find.byKey(ValueKey(photo.uri)), findsOneWidget);
     }
   });
 
-
 }
+

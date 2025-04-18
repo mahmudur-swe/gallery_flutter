@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:gallery_flutter/core/services/thumbnail_processor.dart';
 
 import '../constants/method_channel_constants.dart';
 import '../util/log.dart';
@@ -8,7 +9,7 @@ class PhotoService {
     MethodChannelConstants.photoChannel,
   );
 
-  static Future<List<Map<String, dynamic>>> fetchPhotos() async {
+  Future<List<Map<String, dynamic>>> fetchPhotos() async {
     try {
       final List<dynamic> photoLists = await _channel.invokeMethod(
         MethodChannelConstants.getAllPhotosMethod,
@@ -24,11 +25,11 @@ class PhotoService {
     }
   }
 
-  static Future<Uint8List?> getThumbnailImageBytes(String uri) async {
+  Future<Uint8List?> getThumbnailImageBytes(String uri, {ThumbnailResolution resolution = ThumbnailResolution.high}) async {
     try {
       final result = await _channel.invokeMethod(
         MethodChannelConstants.getThumbnailBytesMethod,
-        {'uri': uri},
+        {'uri': uri, 'resolution': resolution.name}
       );
 
       if (result == null) return null;

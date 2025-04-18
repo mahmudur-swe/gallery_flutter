@@ -6,5 +6,5 @@ import '../data/repositories/photo_repository_impl.dart';
 import '../domain/repositories/photo_repository.dart';
 
 void registerRepositories(GetIt sl) {
-  sl.registerLazySingleton<PhotoRepository>(() => PhotoRepositoryImpl());
+  sl.registerLazySingleton<PhotoRepository>(() => PhotoRepositoryImpl(sl()));
 }

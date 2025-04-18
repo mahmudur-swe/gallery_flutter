@@ -17,8 +17,8 @@ class MockPhotoBloc extends Mock implements PhotoBloc {}
 class _TestHttpOverrides extends HttpOverrides {}
 
 final mockPhotos = [
-  Photo(id: '1', uri: 'https://picsum.photos/id/10/200/300', name: 'Photo 1', size: 100, timestamp: 0),
-  Photo(id: '2', uri: 'https://picsum.photos/id/11/200/301', name: 'Photo 2', size: 200, timestamp: 0),
+  Photo(id: '1', uri: 'https://picsum.photos/id/10/200/300', name: 'Photo 1'),
+  Photo(id: '2', uri: 'https://picsum.photos/id/11/200/301', name: 'Photo 2'),
 ];
 
 void main() {

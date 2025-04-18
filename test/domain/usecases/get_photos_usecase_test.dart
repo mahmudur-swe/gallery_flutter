@@ -12,16 +12,12 @@ final mockPhotos = [
    Photo(
     id: '1',
     uri: 'https://example.com/photo1.jpg',
-    name: 'Test Photo 1',
-    size: 12345,
-    timestamp: 0
+    name: 'Test Photo 1'
   ),
    Photo(
     id: '2',
     uri: 'https://example.com/photo2.jpg',
-    name: 'Test Photo 2',
-    size: 67890,
-    timestamp: 0
+    name: 'Test Photo 2'
   ),
 ];
 

@@ -55,4 +55,17 @@ class AppDimens {
   static const double iconSmall = 16.0;
   static const double iconMedium = 24.0;
   static const double iconLarge = 32.0;
+
+  // Dimens for Photos Screen
+  static const double dimen10 = 10.0;
+  static const double dimen12 = 12.0;
+  static const double dimen14 = 14.0;
+  static const double dimen20 = 20.0;
+  static const double dimen26 = 26.0;
+  static const double dimen42 = 42.0;
+  static const double dimen48 = 48.0;
+  static const double dimen50 = 50.0;
+  static const double dimen100 = 100.0;
+  static const double dimen130 = 130.0;
+
 }

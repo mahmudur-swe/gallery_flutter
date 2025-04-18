@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/app_dimens.dart';
 import '../../../core/services/permission_service.dart';
+import '../../../core/util/log.dart';
 import '../../routes/router.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -21,6 +22,7 @@ class SplashScreen extends StatelessWidget {
           if (state.isGranted == true) {
             // todo: navigate to photos screen
           } else if (state.isGranted == false) {
+            Log.debug("SplashScreen. isGranted: $state, Navigate to checkPermissions");
             context.go(AppRoutes.checkPermissions);
           }
         },

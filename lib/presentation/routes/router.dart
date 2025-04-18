@@ -13,7 +13,7 @@ import '../modules/splash/splash_event.dart';
 
 class AppRoutes {
   static const String photos = '/photos';
-  static const String checkPermissions = '/check_permissions';
+  static const String checkPermissions = '/check-permissions';
 }
 
 

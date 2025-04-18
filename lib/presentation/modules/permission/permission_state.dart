@@ -1,5 +1,10 @@
 
-abstract class PermissionState {}
+import 'package:equatable/equatable.dart';
+
+abstract class PermissionState extends Equatable {
+  @override
+  List<Object?> get props => [];
+}
 
 class PermissionInitial extends PermissionState {}
 

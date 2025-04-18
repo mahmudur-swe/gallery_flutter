@@ -41,19 +41,19 @@ class AppTextStyles {
   );
 
   static final bodyLarge = GoogleFonts.roboto(
-    fontSize: AppDimens.font16,
+    fontSize: AppDimens.font20,
     fontWeight: FontWeight.normal,
     color: AppColors.textPrimary,
   );
 
   static final bodyMedium = GoogleFonts.roboto(
-    fontSize: AppDimens.font14,
+    fontSize: AppDimens.font16,
     fontWeight: FontWeight.normal,
     color: AppColors.textPrimary,
   );
 
   static final bodySmall = GoogleFonts.roboto(
-    fontSize: AppDimens.font12,
+    fontSize: AppDimens.font14,
     fontWeight: FontWeight.normal,
     color: AppColors.textSecondary,
   );

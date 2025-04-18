@@ -6,12 +6,19 @@ import 'package:gallery_flutter/presentation/modules/splash/splash_event.dart';
 import 'package:gallery_flutter/presentation/modules/splash/splash_state.dart';
 
 import '../../../core/services/permission_service.dart';
+import '../../../core/util/log.dart';
 
 class SplashBloc extends Bloc<SplashEvent, SplashState> {
-  SplashBloc() : super(const SplashState()) {
+
+  final PermissionService permissionService;
+
+  SplashBloc(this.permissionService) : super(const SplashState()) {
     on<CheckPermission>((event, emit) async {
       await Future.delayed(const Duration(milliseconds: 1000)); // Splash delay
-      final status = await PermissionService().isMediaPermissionGranted();
+      final status = await permissionService.isMediaPermissionGranted();
+
+      Log.debug("SplashBloc: isGranted: $status");
+
       emit(SplashState(isGranted: status));
     });
   }

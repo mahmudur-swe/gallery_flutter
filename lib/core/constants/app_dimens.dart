@@ -25,6 +25,9 @@ class AppDimens {
   static const double space16 = 16.0;
   static const double space20 = 20.0;
   static const double space24 = 24.0;
+  static const double space32 = 32.0;
+  static const double space40 = 40.0;
+  static const double space42 = 48.0;
 
   // Border Radius
   static const double radius4 = 4.0;
@@ -57,6 +60,7 @@ class AppDimens {
   static const double iconLarge = 32.0;
 
   // Dimens for Photos Screen
+  static const double dimen8 = 8.0;
   static const double dimen10 = 10.0;
   static const double dimen12 = 12.0;
   static const double dimen14 = 14.0;
@@ -66,6 +70,9 @@ class AppDimens {
   static const double dimen48 = 48.0;
   static const double dimen50 = 50.0;
   static const double dimen100 = 100.0;
+  static const double dimen123 = 123.0;
   static const double dimen130 = 130.0;
+  static const double dimen173 = 173.0;
+  static const double dimen200 = 200.0;
 
 }

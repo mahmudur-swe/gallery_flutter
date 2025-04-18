@@ -5,6 +5,7 @@ import 'package:gallery_flutter/presentation/modules/splash/splash_event.dart';
 import 'package:gallery_flutter/presentation/modules/splash/splash_state.dart';
 
 import '../../../core/constants/app_dimens.dart';
+import '../../../core/services/permission_service.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -12,13 +13,13 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => SplashBloc()..add(CheckPermission()),
+      create: (_) => SplashBloc(PermissionService())..add(CheckPermission()),
       child: BlocListener<SplashBloc, SplashState>(
         listener: (context, state) {
           if (state.isGranted == true) {
             // todo: navigate to photos screen
           } else if (state.isGranted == false) {
-            // todo: navigate to no permission screen
+            Navigator.pushNamed(context, "/access_permissions");
           }
         },
         child: Scaffold(

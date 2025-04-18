@@ -17,7 +17,8 @@ ThemeData appTheme = ThemeData(
       foregroundColor: AppColors.onPrimary,
       padding: const EdgeInsets.symmetric(vertical: AppDimens.padding16),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimens.radius32)),
-      textStyle: const TextStyle(fontSize: AppDimens.font20, fontWeight: FontWeight.w500),
+      textStyle: const TextStyle(fontSize: AppDimens.font16, fontWeight: FontWeight.w500),
+      minimumSize: const Size.fromHeight(42),
     ),
   ),
 

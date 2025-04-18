@@ -13,7 +13,7 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
   final PermissionService permissionService;
 
   SplashBloc(this.permissionService) : super(const SplashState()) {
-    on<CheckPermission>((event, emit) async {
+    on<SplashCheckPermission>((event, emit) async {
       await Future.delayed(const Duration(milliseconds: 1000)); // Splash delay
       final status = await permissionService.isMediaPermissionGranted();
 

@@ -23,13 +23,13 @@ class AppTextStyles {
   );
 
   static final titleLarge = GoogleFonts.roboto(
-    fontSize: AppDimens.font22,
+    fontSize: AppDimens.font24,
     fontWeight: FontWeight.w600,
     color: AppColors.textPrimary,
   );
 
   static final titleMedium = GoogleFonts.roboto(
-    fontSize: AppDimens.font18,
+    fontSize: AppDimens.font20,
     fontWeight: FontWeight.w500,
     color: AppColors.textPrimary,
   );

@@ -5,7 +5,10 @@ import 'package:gallery_flutter/core/constants/app_dimens.dart';
 import 'package:gallery_flutter/presentation/modules/permission/permission_bloc.dart';
 import 'package:gallery_flutter/presentation/modules/permission/permission_event.dart';
 import 'package:gallery_flutter/presentation/modules/permission/permission_state.dart';
+import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
+
+import '../../routes/router.dart';
 
 class PermissionScreen extends StatefulWidget {
   const PermissionScreen({super.key});
@@ -71,7 +74,7 @@ class _PermissionScreenState extends State<PermissionScreen>
                 ),
           );
         } else if (state is PermissionGranted) {
-          // todo: navigate to photos screen
+          context.go(AppRoutes.photos);
         }
       },
       builder: (context, state) {

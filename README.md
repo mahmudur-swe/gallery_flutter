@@ -1,16 +1,53 @@
-# gallery_flutter
+# 📷 Gallery Flutter App
 
-A new Flutter project.
+#### A cross-functional, cleanly architected Flutter photo gallery application that features optimized native thumbnail loading, custom in-memory and disk caching, image selection with blur effects, and secure local photo saving functionality.
+---
 
-## Getting Started
+### 🚀 Features
 
-This project is a starting point for a Flutter application.
+- Load photos from device gallery using native platform channels
+- Dual resolution thumbnails (low-res first, then high-res)
+- Progressive image loading with shimmer placeholder
+- Selectable photos with visual tick and blur effect
+- Save selected images to device gallery
+- Custom in-memory and disk caching
+- Works across Android & iOS
+- BLoC + Clean Architecture
 
-A few resources to get you started if this is your first Flutter project:
+---
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### 🛠 Tech Stack
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- **Flutter**: 3.29.3 (stable)
+- **Dart**: 3.7.2
+- **Architecture**: Clean Architecture
+- **State Management**: BLoC & Cubit
+- **Navigation**: go_router
+- **Testing**: flutter_test, mocktail
+- **Image Handling**: Custom in-memory LRU and disk caching with native thumbnail support
+- **Thumbnail Optimization**: Dual resolution support (Low & High)
+- **Permissions**: permission_handler
+- **UI Toolkit**: Material Design + Shimmer + Custom Theming
+
+---
+
+## 📈 Run Tests with Coverage
+
+To run all unit tests and generate a coverage report:
+
+```bash
+flutter test --coverage
+```
+#### Mac 
+```bash
+brew install lcov
+genhtml coverage/lcov.info -o coverage/html
+open coverage/html/index.html
+```
+#### Windows 
+```bash
+choco install lcov
+genhtml coverage/lcov.info -o coverage/html
+start coverage/html/index.html
+```
+

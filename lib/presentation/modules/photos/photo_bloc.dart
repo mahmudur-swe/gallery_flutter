@@ -4,7 +4,6 @@ import 'package:gallery_flutter/presentation/modules/photos/photo_state.dart';
 
 import '../../../domain/usecases/get_photos_usecase.dart';
 
-
 class PhotoBloc extends Bloc<PhotoEvent, PhotoState> {
   final GetPhotosUseCase getPhotosUseCase;
 

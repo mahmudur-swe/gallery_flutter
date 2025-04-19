@@ -7,7 +7,7 @@ class PhotoState extends Equatable {
   final bool isLoading;
   final String? errorMessage;
 
-  PhotoState({
+  const PhotoState({
     this.photos = const [],
     this.isLoading = false,
     this.errorMessage,

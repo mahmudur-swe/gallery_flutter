@@ -3,6 +3,8 @@ import 'dart:typed_data';
 import 'package:gallery_flutter/core/services/photo_services.dart';
 import 'package:quiver/collection.dart';
 
+import '../util/log.dart';
+
 abstract class ThumbnailProcessor {
   Future<Uint8List?> loadThumbnail(
     String uri, {
@@ -53,7 +55,7 @@ class ThumbnailProcessorImpl implements ThumbnailProcessor {
 
       return null;
     } catch (e) {
-      print('ThumbnailProcessor: Error loading thumbnail for $uri - $e');
+      Log.error('ThumbnailProcessor: Error loading thumbnail for $uri - $e');
       return null;
     }
   }

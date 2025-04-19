@@ -27,10 +27,11 @@ class ProgressiveImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Uint8List?>(
+      key: ValueKey(uri),
       future: thumbnailProcessor.loadThumbnail(uri, resolution:  ThumbnailResolution.low),
       builder: (context, lowSnap) {
 
-        if (lowSnap.hasData == false || lowSnap.connectionState != ConnectionState.done) {
+        if ( lowSnap.hasData == false || lowSnap.connectionState != ConnectionState.done) {
           return ShimmerPlaceholder(); // shimmer or empty
         }
 
@@ -53,7 +54,7 @@ class ProgressiveImage extends StatelessWidget {
               future: thumbnailProcessor.loadThumbnail(uri, resolution:  ThumbnailResolution.high),
               builder: (context, highSnap) {
 
-                if (highSnap.connectionState == ConnectionState.waiting || !highSnap.hasData) {
+                if (!highSnap.hasData || highSnap.connectionState == ConnectionState.waiting ) {
                   return const SizedBox.shrink(); // No overlay until ready
                 }
 
@@ -63,8 +64,7 @@ class ProgressiveImage extends StatelessWidget {
                     highSnap.data!,
                     width: width,
                     height: height,
-                    fit: BoxFit.cover,
-                    key: ValueKey(highSnap.data),
+                    fit: BoxFit.cover
                   ),
                 );
               },
@@ -74,71 +74,4 @@ class ProgressiveImage extends StatelessWidget {
       },
     );
   }
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   return FutureBuilder<Uint8List?>(
-  //     future: thumbnailProcessor.loadThumbnail(
-  //       uri,
-  //       resolution: ThumbnailResolution.low,
-  //     ),
-  //     builder: (context, lowSnap) {
-  //       if (lowSnap.connectionState != ConnectionState.done) {
-  //         return ShimmerPlaceholder(); // shimmer or empty
-  //       }
-  //
-  //       return FutureBuilder<Uint8List?>(
-  //         future: thumbnailProcessor.loadThumbnail(
-  //           uri,
-  //           resolution: ThumbnailResolution.high,
-  //         ),
-  //         builder: (context, highSnap) {
-  //           final imageBytes = highSnap.data ?? lowSnap.data!;
-  //           return ClipRRect(
-  //             borderRadius: borderRadius,
-  //             child: Image.memory(
-  //               imageBytes,
-  //               key: ValueKey(uri),
-  //               width: width,
-  //               height: height,
-  //               fit: BoxFit.cover,
-  //             ),
-  //           );
-  //         },
-  //       );
-  //     },
-  //   );
-  // }
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   return FutureBuilder<Uint8List?>(
-  //     future: thumbnailProcessor.loadThumbnail(uri, resolution: ThumbnailResolution.low),
-  //     builder: (context, lowSnap) {
-  //
-  //       if (lowSnap.connectionState != ConnectionState.done) {
-  //         return ShimmerPlaceholder(); // shimmer or empty
-  //       }
-  //
-  //       return Stack(
-  //         fit: StackFit.expand,
-  //         children: [
-  //           Image.memory(lowSnap.data!, fit: BoxFit.cover),
-  //           FutureBuilder<Uint8List?>(
-  //             future: thumbnailProcessor.loadThumbnail(uri, resolution: ThumbnailResolution.high),
-  //             builder: (context, highSnap) {
-  //               if (highSnap.hasData) {
-  //                 return FadeInImage(
-  //                   placeholder: MemoryImage(lowSnap.data!),
-  //                   image: MemoryImage(highSnap.data!),
-  //                   fit: BoxFit.cover,
-  //                 );
-  //               }
-  //               return const SizedBox.shrink(); // Just overlay nothing
-  //             },
-  //           )
-  //         ],
-  //       );
-  //     },
-  //   );
 }

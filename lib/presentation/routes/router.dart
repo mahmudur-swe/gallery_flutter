@@ -11,6 +11,7 @@ import '../modules/permission/permission_event.dart';
 import '../modules/photos/photo_bloc.dart';
 import '../modules/photos/photo_event.dart';
 import '../modules/photos/photo_screen.dart';
+import '../modules/photos/selection_cubit.dart';
 import '../modules/splash/splash_bloc.dart';
 import '../modules/splash/splash_event.dart';
 
@@ -45,13 +46,22 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.photos,
       builder: (BuildContext context, GoRouterState state) {
-        return BlocProvider(
-          // bloc injected by dependency injection
-          create: (_) => sl<PhotoBloc>()..add(LoadPhotos()),
-          child: PhotoScreen(
-            thumbnailProcessor: sl<ThumbnailProcessor>(),
-          ),
+
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (_) => sl<PhotoBloc>()..add(LoadPhotos())),
+            BlocProvider(create: (_) => SelectionCubit()),
+          ],
+          child: PhotoScreen(thumbnailProcessor: sl()),
         );
+
+        // return BlocProvider(
+        //   // bloc injected by dependency injection
+        //   create: (_) => sl<PhotoBloc>()..add(LoadPhotos()),
+        //   child: PhotoScreen(
+        //     thumbnailProcessor: sl<ThumbnailProcessor>(),
+        //   ),
+        // );
       },
     ),
   ],

@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gallery_flutter/core/constants/app_dimens.dart';
 import 'package:gallery_flutter/presentation/modules/photos/photo_bloc.dart';
+import 'package:gallery_flutter/presentation/modules/photos/photo_event.dart';
 import 'package:gallery_flutter/presentation/modules/photos/photo_state.dart';
+import 'package:gallery_flutter/presentation/modules/photos/selection_cubit.dart';
+import 'package:gallery_flutter/presentation/widgets/selectable_photo_tile.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/services/thumbnail_processor.dart';
 import '../../../core/util/utils.dart';
-import '../../widgets/ProgressiveImage.dart';
 
 //  WidgetsBinding.instance.addPostFrameCallback((_) {
 //       context.read<PhotoBloc>().add(LoadPhotos(albumId));
@@ -84,9 +86,20 @@ class PhotoScreen extends StatelessWidget {
                   final photo = state.photos[index];
                   final uri = photo.uri; // 🔁 Adjust if structure changes
 
-                  return ProgressiveImage(
-                    uri: uri,
-                    thumbnailProcessor: thumbnailProcessor,
+                  return BlocSelector<SelectionCubit, Set<String>, bool>(
+                    selector: (selection) => selection.contains(photo.id),
+                    builder: (context, isSelected) {
+                      return SelectablePhotoTile(
+                        photoId: photo.id,
+                        uri: photo.uri,
+                        isSelected: isSelected,
+                        onToggle:
+                            () => {
+                              context.read<SelectionCubit>().toggle(photo.id),
+                            },
+                        thumbnailProcessor: thumbnailProcessor,
+                      );
+                    },
                   );
                 },
               );

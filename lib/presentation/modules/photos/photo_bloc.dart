@@ -19,5 +19,15 @@ class PhotoBloc extends Bloc<PhotoEvent, PhotoState> {
         emit(state.copyWith(isLoading: false, errorMessage: e.toString()));
       }
     });
+
+    // on<TogglePhotoSelection>((event, emit) {
+    //   final updatedSelection = Set<String>.from(state.selectedPhotoIds);
+    //   if (updatedSelection.contains(event.photoId)) {
+    //     updatedSelection.remove(event.photoId);
+    //   } else {
+    //     updatedSelection.add(event.photoId);
+    //   }
+    //   emit(state.copyWith(selectedPhotoIds: updatedSelection));
+    // });
   }
 }

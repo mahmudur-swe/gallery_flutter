@@ -2,11 +2,11 @@
 
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gallery_flutter/presentation/modules/splash/splash_event.dart';
-import 'package:gallery_flutter/presentation/modules/splash/splash_state.dart';
+import 'package:gallery_flutter/presentation/modules/splash/bloc/splash_event.dart';
+import 'package:gallery_flutter/presentation/modules/splash/bloc/splash_state.dart';
 
-import '../../../core/services/permission_service.dart';
-import '../../../core/util/log.dart';
+import '../../../../core/services/permission_service.dart';
+import '../../../../core/util/log.dart';
 
 class SplashBloc extends Bloc<SplashEvent, SplashState> {
 

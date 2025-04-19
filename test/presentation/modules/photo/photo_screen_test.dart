@@ -9,12 +9,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gallery_flutter/core/services/thumbnail_processor.dart';
 import 'package:gallery_flutter/di/injection_container.dart';
 import 'package:gallery_flutter/domain/entities/photo.dart';
-import 'package:gallery_flutter/presentation/modules/photos/download_cubit.dart';
-import 'package:gallery_flutter/presentation/modules/photos/download_state.dart';
-import 'package:gallery_flutter/presentation/modules/photos/photo_bloc.dart';
-import 'package:gallery_flutter/presentation/modules/photos/photo_screen.dart';
-import 'package:gallery_flutter/presentation/modules/photos/photo_state.dart';
-import 'package:gallery_flutter/presentation/modules/photos/selection_cubit.dart';
+import 'package:gallery_flutter/presentation/modules/photos/bloc/photo_state.dart';
+import 'package:gallery_flutter/presentation/modules/photos/cubit/download_cubit.dart';
+import 'package:gallery_flutter/presentation/modules/photos/cubit/download_state.dart';
+import 'package:gallery_flutter/presentation/modules/photos/bloc/photo_bloc.dart';
+import 'package:gallery_flutter/presentation/modules/photos/view/photo_screen.dart';
+import 'package:gallery_flutter/presentation/modules/photos/cubit/selection_cubit.dart';
 import 'package:mocktail/mocktail.dart';
 
 

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gallery_flutter/presentation/modules/splash/splash_bloc.dart';
-import 'package:gallery_flutter/presentation/modules/splash/splash_state.dart';
+import 'package:gallery_flutter/presentation/modules/splash/bloc/splash_bloc.dart';
+import 'package:gallery_flutter/presentation/modules/splash/bloc/splash_state.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/constants/app_dimens.dart';
-import '../../../core/util/log.dart';
-import '../../routes/router.dart';
+import '../../../../core/constants/app_dimens.dart';
+import '../../../../core/util/log.dart';
+import '../../../routes/router.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});

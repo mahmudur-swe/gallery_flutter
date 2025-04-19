@@ -1,9 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gallery_flutter/presentation/modules/permission/permission_event.dart';
-import 'package:gallery_flutter/presentation/modules/permission/permission_state.dart';
+import 'package:gallery_flutter/presentation/modules/permission/bloc/permission_event.dart';
+import 'package:gallery_flutter/presentation/modules/permission/bloc/permission_state.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../../../core/services/permission_service.dart';
+import '../../../../core/services/permission_service.dart';
 
 
 

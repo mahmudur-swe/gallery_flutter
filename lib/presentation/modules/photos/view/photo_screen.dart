@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gallery_flutter/core/constants/app_dimens.dart';
-import 'package:gallery_flutter/presentation/modules/photos/photo_bloc.dart';
-import 'package:gallery_flutter/presentation/modules/photos/photo_state.dart';
-import 'package:gallery_flutter/presentation/modules/photos/selection_cubit.dart';
+import 'package:gallery_flutter/presentation/modules/photos/bloc/photo_bloc.dart';
+import 'package:gallery_flutter/presentation/modules/photos/cubit/selection_cubit.dart';
 import 'package:gallery_flutter/presentation/widgets/selectable_photo_tile.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/services/thumbnail_processor.dart';
-import '../../../core/theme/app_button.dart';
-import '../../../core/theme/app_colors.dart';
-import '../../../core/util/utils.dart';
-import 'download_cubit.dart';
-import 'download_state.dart';
+import '../../../../core/services/thumbnail_processor.dart';
+import '../../../../core/theme/app_button.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/util/utils.dart';
+import '../bloc/photo_state.dart';
+import '../cubit/download_cubit.dart';
+import '../cubit/download_state.dart';
 
 //  WidgetsBinding.instance.addPostFrameCallback((_) {
 //       context.read<PhotoBloc>().add(LoadPhotos(albumId));

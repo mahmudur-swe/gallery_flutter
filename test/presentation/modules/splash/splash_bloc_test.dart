@@ -3,9 +3,9 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gallery_flutter/core/services/permission_service.dart';
-import 'package:gallery_flutter/presentation/modules/splash/splash_bloc.dart';
-import 'package:gallery_flutter/presentation/modules/splash/splash_event.dart';
-import 'package:gallery_flutter/presentation/modules/splash/splash_state.dart';
+import 'package:gallery_flutter/presentation/modules/splash/bloc/splash_bloc.dart';
+import 'package:gallery_flutter/presentation/modules/splash/bloc/splash_event.dart';
+import 'package:gallery_flutter/presentation/modules/splash/bloc/splash_state.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockPermissionService extends Mock implements PermissionService {}

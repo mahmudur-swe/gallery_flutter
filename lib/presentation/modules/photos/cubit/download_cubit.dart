@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gallery_flutter/domain/usecases/save_photo_usecase.dart';
 
-import '../../../domain/entities/photo.dart';
+import '../../../../domain/entities/photo.dart';
 import 'download_state.dart';
 
 class DownloadCubit extends Cubit<DownloadState> {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gallery_flutter/core/theme/app_theme.dart';
-import 'package:gallery_flutter/presentation/modules/permission/permission_screen.dart';
-import 'package:gallery_flutter/presentation/modules/splash/splash_screen.dart';
+import 'package:gallery_flutter/presentation/modules/permission/view/permission_screen.dart';
+import 'package:gallery_flutter/presentation/modules/splash/view/splash_screen.dart';
 import 'package:gallery_flutter/presentation/routes/router.dart';
 
 import 'di/injection_container.dart';

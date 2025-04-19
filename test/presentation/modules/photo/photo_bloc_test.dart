@@ -4,9 +4,9 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gallery_flutter/domain/entities/photo.dart';
 import 'package:gallery_flutter/domain/usecases/get_photos_usecase.dart';
-import 'package:gallery_flutter/presentation/modules/photos/photo_bloc.dart';
-import 'package:gallery_flutter/presentation/modules/photos/photo_event.dart';
-import 'package:gallery_flutter/presentation/modules/photos/photo_state.dart';
+import 'package:gallery_flutter/presentation/modules/photos/bloc/photo_bloc.dart';
+import 'package:gallery_flutter/presentation/modules/photos/bloc/photo_event.dart';
+import 'package:gallery_flutter/presentation/modules/photos/bloc/photo_state.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockGetPhotosUseCase extends Mock implements GetPhotosUseCase {}

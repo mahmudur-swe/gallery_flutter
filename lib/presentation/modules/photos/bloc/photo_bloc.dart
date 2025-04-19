@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gallery_flutter/presentation/modules/photos/photo_event.dart';
-import 'package:gallery_flutter/presentation/modules/photos/photo_state.dart';
+import 'package:gallery_flutter/presentation/modules/photos/bloc/photo_event.dart';
+import 'package:gallery_flutter/presentation/modules/photos/bloc/photo_state.dart';
 
-import '../../../domain/usecases/get_photos_usecase.dart';
+import '../../../../domain/usecases/get_photos_usecase.dart';
 
 class PhotoBloc extends Bloc<PhotoEvent, PhotoState> {
   final GetPhotosUseCase getPhotosUseCase;

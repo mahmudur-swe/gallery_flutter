@@ -3,9 +3,9 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gallery_flutter/core/services/permission_service.dart';
-import 'package:gallery_flutter/presentation/modules/permission/permission_bloc.dart';
-import 'package:gallery_flutter/presentation/modules/permission/permission_event.dart';
-import 'package:gallery_flutter/presentation/modules/permission/permission_state.dart';
+import 'package:gallery_flutter/presentation/modules/permission/bloc/permission_bloc.dart';
+import 'package:gallery_flutter/presentation/modules/permission/bloc/permission_event.dart';
+import 'package:gallery_flutter/presentation/modules/permission/bloc/permission_state.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:permission_handler/permission_handler.dart';
 

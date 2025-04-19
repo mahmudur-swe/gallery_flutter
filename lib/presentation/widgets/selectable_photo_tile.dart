@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/constants/app_dimens.dart';
 import '../../core/services/thumbnail_processor.dart';
-import 'ProgressiveImage.dart';
+import 'progressive_image.dart';
 
 class SelectablePhotoTile extends StatelessWidget {
   final String photoId;

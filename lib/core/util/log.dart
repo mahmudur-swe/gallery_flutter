@@ -14,7 +14,7 @@ class Log {
         lineLength: 120,
         colors: true,
         printEmojis: true,
-        printTime: false,
+        dateTimeFormat: DateTimeFormat.onlyTimeAndSinceStart,
       ),
     );
   }
@@ -33,8 +33,8 @@ class Log {
       _instance._logger.e(message, error: error, stackTrace: stackTrace);
 
   /// Verbose / fine-grained logs
-  static void verbose(dynamic message) => _instance._logger.v(message);
+  static void verbose(dynamic message) => _instance._logger.t(message);
 
   /// WTF-level logs (critical)
-  static void wtf(dynamic message) => _instance._logger.wtf(message);
+  static void wtf(dynamic message) => _instance._logger.f(message);
 }

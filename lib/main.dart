@@ -1,31 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:gallery_flutter/core/theme/app_theme.dart';
-import 'package:gallery_flutter/presentation/modules/permission/view/permission_screen.dart';
-import 'package:gallery_flutter/presentation/modules/splash/view/splash_screen.dart';
 import 'package:gallery_flutter/presentation/routes/router.dart';
 
 import 'di/injection_container.dart';
 
 void main() async {
-
   WidgetsFlutterBinding.ensureInitialized();
 
   await initDI();
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: appTheme,
-      home: const App(),
-    );
-  }
+  runApp(const App());
 }
 
 class App extends StatelessWidget {
@@ -34,9 +17,10 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Gallery Flutter',
+      //showPerformanceOverlay: true,
+      title: 'Photos',
       theme: appTheme,
-      routerConfig: appRouter
+      routerConfig: appRouter,
     );
   }
 }

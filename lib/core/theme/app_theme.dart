@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gallery_flutter/core/theme/text_styles.dart';
 
-import '../constants/app_dimens.dart';
 import 'app_button.dart';
 import 'app_color_schemes.dart';
 import 'app_colors.dart';

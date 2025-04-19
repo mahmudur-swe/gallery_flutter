@@ -19,7 +19,7 @@ import '../cubit/download_state.dart';
 //     });
 
 class PhotoScreen extends StatelessWidget {
-  final ImageProcessor thumbnailProcessor;
+  final ThumbnailProcessor thumbnailProcessor;
 
   const PhotoScreen({super.key, required this.thumbnailProcessor});
 
@@ -43,7 +43,7 @@ class PhotoScreen extends StatelessWidget {
             final selectedIds = context.read<SelectionCubit>().state;
 
             if (downloadState.isDownloading) {
-              final cancel = await showDialog<bool>(
+               await showDialog<bool>(
                 context: context,
                 builder:
                     (internalContext) => AlertDialog(

@@ -3,6 +3,7 @@
 class MethodChannelConstants {
 
   static const String photoChannel = 'gallery_flutter/photos';
+  static const String configChannel = 'gallery_flutter/config';
 
   static const String getAllPhotosMethod = 'getPhotos';
   static const String getThumbnailBytesMethod = 'getThumbnailBytes';
@@ -12,4 +13,6 @@ class MethodChannelConstants {
   static const String paramUri = 'uri';
   static const String paramImageBytes = 'imageBytes';
   static const String paramResolution = 'resolution';
+
+  static const String getTotalMemoryMethod = 'getTotalMemory';
 }

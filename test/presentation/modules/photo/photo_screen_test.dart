@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gallery_flutter/core/services/thumbnail_processor.dart';
-import 'package:gallery_flutter/di/injection_container.dart';
 import 'package:gallery_flutter/domain/entities/photo.dart';
 import 'package:gallery_flutter/presentation/modules/photos/bloc/photo_state.dart';
 import 'package:gallery_flutter/presentation/modules/photos/cubit/download_cubit.dart';
@@ -40,7 +39,7 @@ class MockPhotoBloc extends Mock implements PhotoBloc {
 
 }
 
-class MockThumbnailProcessor extends Mock implements ImageProcessor {}
+class MockThumbnailProcessor extends Mock implements ThumbnailProcessor {}
 
 class MockSelectionCubit extends Mock implements SelectionCubit {}
 
@@ -62,7 +61,6 @@ void main() {
   late MockDownloadCubit mockDownloadCubit;
   late MockThumbnailProcessor mockProcessor;
 
-  // todo: remove this when data fetching is implemented
   setUpAll(() {
     HttpOverrides.global = _TestHttpOverrides(); // ✅ Prevent network image errors
   });
@@ -164,24 +162,7 @@ void main() {
     verify(() => mockSelectionCubit.toggle('1')).called(1);
   });
 
-  void setUpMock() {
-    when(() => mockBloc.state).thenReturn(PhotoState(photos: mockPhotos));
-    when(() => mockBloc.stream).thenAnswer((_) => Stream.value(PhotoState(photos: mockPhotos)));
 
-    when(() => mockProcessor.loadThumbnail(any(), resolution: ThumbnailResolution.low))
-        .thenAnswer((_) async => validImageBytes);
-
-    when(() => mockProcessor.loadThumbnail(any(), resolution: ThumbnailResolution.high))
-        .thenAnswer((_) async => validImageBytes);
-
-    when(() => mockSelectionCubit.stream).thenAnswer((_) => Stream.value(<String>{'1'}));
-    when(() => mockSelectionCubit.state).thenReturn(<String>{'1'});
-
-    when(() => mockDownloadCubit.stream).thenAnswer((_) => Stream.value(const DownloadState()));
-    when(() => mockDownloadCubit.state).thenReturn(const DownloadState());
-
-    when(() => mockDownloadCubit.download(any())).thenAnswer((_) async {});
-  }
 
 
 

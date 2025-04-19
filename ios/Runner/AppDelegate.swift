@@ -11,10 +11,23 @@ import Photos
     ) -> Bool {
 
         let controller = window?.rootViewController as! FlutterViewController
-        let channel = FlutterMethodChannel(
+
+        let configChannel = FlutterMethodChannel(
+            name: "gallery_flutter/config", binaryMessenger: controller.binaryMessenger)
+
+        configChannel.setMethodCallHandler { call, result in
+            if call.method == "getTotalMemory" {
+                let total = ProcessInfo.processInfo.physicalMemory / (1024 * 1024)
+                result(Int(total))
+            } else {
+                result(FlutterMethodNotImplemented)
+            }
+        }
+
+        let photoChannel = FlutterMethodChannel(
             name: "gallery_flutter/photos", binaryMessenger: controller.binaryMessenger)
 
-        channel.setMethodCallHandler { (call, result) in
+        photoChannel.setMethodCallHandler { (call, result) in
             switch call.method {
 
             case "getPhotos":
@@ -30,7 +43,8 @@ import Photos
                     )
                     return
                 }
-                self.getThumbnailFromFilePath(assetId: assetId, resolution: resolution, result: result)
+                self.getThumbnailFromFilePath(
+                    assetId: assetId, resolution: resolution, result: result)
 
             case "getFullFrameImage":
                 guard let args = call.arguments as? [String: Any],
@@ -45,12 +59,13 @@ import Photos
 
             case "savePhoto":
                 if let args = call.arguments as? [String: Any],
-                   let imageBytes = args["imageBytes"] as? FlutterStandardTypedData
+                    let imageBytes = args["imageBytes"] as? FlutterStandardTypedData
                 {
                     self.saveImageToGallery(data: imageBytes.data, result: result)
                 } else {
                     result(
-                        FlutterError(code: "INVALID_ARGS", message: "Missing imageBytes", details: nil)
+                        FlutterError(
+                            code: "INVALID_ARGS", message: "Missing imageBytes", details: nil)
                     )
                     return
                 }
@@ -131,8 +146,9 @@ import Photos
         }
     }
 
-    func getThumbnailFromFilePath(assetId: String, resolution: String, result: @escaping FlutterResult)
-    {
+    func getThumbnailFromFilePath(
+        assetId: String, resolution: String, result: @escaping FlutterResult
+    ) {
         let fileURL = URL(fileURLWithPath: assetId)
 
         let targetSize =
@@ -194,7 +210,10 @@ import Photos
 
     private func saveImageToGallery(data: Data, result: @escaping FlutterResult) {
         guard let image = UIImage(data: data) else {
-            result(FlutterError(code: "INVALID_IMAGE", message: "Failed to convert data to image.", details: nil))
+            result(
+                FlutterError(
+                    code: "INVALID_IMAGE", message: "Failed to convert data to image.", details: nil
+                ))
             return
         }
 
@@ -205,12 +224,21 @@ import Photos
                     UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
                     result(true)
                 case .denied, .restricted:
-                    result(FlutterError(code: "PERMISSION_DENIED", message: "Photo library access denied.", details: nil))
+                    result(
+                        FlutterError(
+                            code: "PERMISSION_DENIED", message: "Photo library access denied.",
+                            details: nil))
                 case .notDetermined:
                     // Handle not determined case if necessary
-                    result(FlutterError(code: "PERMISSION_NOT_DETERMINED", message: "Photo library permission not determined.", details: nil))
+                    result(
+                        FlutterError(
+                            code: "PERMISSION_NOT_DETERMINED",
+                            message: "Photo library permission not determined.", details: nil))
                 @unknown default:
-                    result(FlutterError(code: "UNKNOWN_STATUS", message: "Unknown photo library authorization status.", details: nil))
+                    result(
+                        FlutterError(
+                            code: "UNKNOWN_STATUS",
+                            message: "Unknown photo library authorization status.", details: nil))
                 }
             }
         } else {
@@ -220,17 +248,24 @@ import Photos
                     UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
                     result(true)
                 case .denied, .restricted:
-                    result(FlutterError(code: "PERMISSION_DENIED", message: "Photo library access denied.", details: nil))
+                    result(
+                        FlutterError(
+                            code: "PERMISSION_DENIED", message: "Photo library access denied.",
+                            details: nil))
                 case .notDetermined:
                     // Handle not determined case if necessary
-                    result(FlutterError(code: "PERMISSION_NOT_DETERMINED", message: "Photo library permission not determined.", details: nil))
+                    result(
+                        FlutterError(
+                            code: "PERMISSION_NOT_DETERMINED",
+                            message: "Photo library permission not determined.", details: nil))
                 @unknown default:
-                    result(FlutterError(code: "UNKNOWN_STATUS", message: "Unknown photo library authorization status.", details: nil))
+                    result(
+                        FlutterError(
+                            code: "UNKNOWN_STATUS",
+                            message: "Unknown photo library authorization status.", details: nil))
                 }
             }
         }
     }
 
 }
-
-

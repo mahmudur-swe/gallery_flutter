@@ -1,5 +1,6 @@
 package com.example.gallery_flutter
 
+import android.app.ActivityManager
 import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
@@ -9,30 +10,48 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
 import android.util.Size
+import androidx.core.net.toUri
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import java.io.ByteArrayOutputStream
-import androidx.core.net.toUri
 import java.io.OutputStream
 
-const val CHANNEL = "gallery_flutter/photos"
+const val CONFIG_CHANNEL = "gallery_flutter/config"
+
+const val PHOTO_CHANNEL = "gallery_flutter/photos"
 const val GET_ALL_PHOTOS_METHOD = "getPhotos"
 const val GET_THUMBNAIL_BYTES_METHOD = "getThumbnailBytes"
 const val GET_FULL_FRAME_IMAGE_METHOD = "getFullFrameImage"
 const val SAVE_PHOTO_METHOD = "savePhoto"
 
-class MainActivity : FlutterActivity(){
+const val GET_TOTAL_MEMORY_METHOD = "getTotalMemory"
+
+class MainActivity : FlutterActivity() {
 
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+
         super.configureFlutterEngine(flutterEngine)
+
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CONFIG_CHANNEL)
+            .setMethodCallHandler { call, result ->
+                if (call.method == GET_TOTAL_MEMORY_METHOD) {
+                    val activityManager =
+                        getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+                    val memoryInfo = ActivityManager.MemoryInfo()
+                    activityManager.getMemoryInfo(memoryInfo)
+                    val totalMemMB = memoryInfo.totalMem / (1024 * 1024)
+                    result.success(totalMemMB.toInt())
+                } else {
+                    result.notImplemented()
+                }
+            }
 
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
-            CHANNEL
+            PHOTO_CHANNEL
         ).setMethodCallHandler { call, result ->
 
             if (call.method == GET_ALL_PHOTOS_METHOD) {
@@ -61,30 +80,27 @@ class MainActivity : FlutterActivity(){
                 } else {
                     result.error("UNAVAILABLE", "Could not load thumbnail", null)
                 }
-            }
-
-            else if (call.method == SAVE_PHOTO_METHOD) {
+            } else if (call.method == SAVE_PHOTO_METHOD) {
 
                 val imageBytes = call.argument<ByteArray>("imageBytes")
 
-                if(imageBytes == null) {
+                if (imageBytes == null) {
                     result.error("UNAVAILABLE", "Could not load thumbnail", null)
                 }
 
                 try {
                     val success = savePhoto(this, imageBytes!!)
                     result.success(success)
-                }catch (e: Exception) {
+                } catch (e: Exception) {
                     result.error("UNAVAILABLE", "Could not save photo", null)
                 }
 
-            }
-
-            else {
+            } else {
                 result.notImplemented()
             }
         }
     }
+
 
 }
 
@@ -103,25 +119,26 @@ fun getPhotos(
 
     val uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
 
-    context.contentResolver.query(uri, projection.toTypedArray(), null, null, sortOrder)?.use { cursor ->
-        val idCol = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID)
-        val nameCol = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME)
+    context.contentResolver.query(uri, projection.toTypedArray(), null, null, sortOrder)
+        ?.use { cursor ->
+            val idCol = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID)
+            val nameCol = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME)
 
 
-        while (cursor.moveToNext()) {
-            val id = cursor.getLong(idCol)
-            val name = cursor.getString(nameCol) ?: "Unknown"
-            val uriWithId = ContentUris.withAppendedId(uri, id)
+            while (cursor.moveToNext()) {
+                val id = cursor.getLong(idCol)
+                val name = cursor.getString(nameCol) ?: "Unknown"
+                val uriWithId = ContentUris.withAppendedId(uri, id)
 
-            mediaList.add(
-                mapOf(
-                    "id" to id,
-                    "name" to name,
-                    "uri" to uriWithId.toString()
+                mediaList.add(
+                    mapOf(
+                        "id" to id,
+                        "name" to name,
+                        "uri" to uriWithId.toString()
+                    )
                 )
-            )
+            }
         }
-    }
 
     return mediaList
 }
@@ -160,6 +177,7 @@ private fun getThumbnailBytes(context: Context, uriString: String, resolution: S
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q -> {
                 context.contentResolver.loadThumbnail(uri, targetSize, null)
             }
+
             else -> {
                 decodeThumbnail(context, uri, targetSize.width, targetSize.height)
             }
@@ -183,10 +201,12 @@ fun decodeThumbnail(context: Context, uri: Uri, targetWidth: Int, targetHeight: 
 
         BitmapFactory.decodeStream(inputStream, null, options)
 
-        val scaleFactor = maxOf(1, minOf(
-            options.outWidth / targetWidth,
-            options.outHeight / targetHeight
-        ))
+        val scaleFactor = maxOf(
+            1, minOf(
+                options.outWidth / targetWidth,
+                options.outHeight / targetHeight
+            )
+        )
 
         options.inJustDecodeBounds = false
         options.inSampleSize = scaleFactor
@@ -198,7 +218,7 @@ fun decodeThumbnail(context: Context, uri: Uri, targetWidth: Int, targetHeight: 
     }
 }
 
-fun savePhoto(context: Context, imageBytes : ByteArray): Boolean {
+fun savePhoto(context: Context, imageBytes: ByteArray): Boolean {
     val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
     val filename = "IMG_${System.currentTimeMillis()}.jpg"
 
@@ -223,6 +243,7 @@ fun savePhoto(context: Context, imageBytes : ByteArray): Boolean {
     } ?: run {
         throw Exception("Failed to save image")
     }
+
 
 }
 

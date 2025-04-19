@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gallery_flutter/core/services/thumbnail_processor.dart';
 import 'package:gallery_flutter/presentation/modules/permission/view/permission_screen.dart';
 import 'package:gallery_flutter/presentation/modules/splash/view/splash_screen.dart';
 import 'package:go_router/go_router.dart';

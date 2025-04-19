@@ -7,5 +7,6 @@ import '../core/services/thumbnail_processor.dart';
 
 void registerDataSource(GetIt sl) {
   sl.registerLazySingleton<PhotoLocalDataSource>(() => PhotoLocalDataSource(sl()));
-  sl.registerLazySingleton<ImageProcessor>(() => ThumbnailProcessorImpl(sl()));
+  sl.registerLazySingleton<ThumbnailProcessor>(() => ThumbnailProcessorImpl(sl())..init());
+
 }

@@ -5,7 +5,7 @@ class Photo extends Equatable{
   final String uri;
   final String name;
 
-  Photo({
+  const Photo({
     required this.id,
     required this.uri,
     required this.name

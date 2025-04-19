@@ -8,7 +8,7 @@ import '../../core/constants/app_dimens.dart';
 
 class ProgressiveImage extends StatelessWidget {
   final String uri;
-  final ImageProcessor thumbnailProcessor;
+  final ThumbnailProcessor thumbnailProcessor;
   final double width;
   final double height;
   final BorderRadius borderRadius;
@@ -28,10 +28,13 @@ class ProgressiveImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder<Uint8List?>(
       key: ValueKey(uri),
-      future: thumbnailProcessor.loadThumbnail(uri, resolution:  ThumbnailResolution.low),
+      future: thumbnailProcessor.loadThumbnail(
+        uri,
+        resolution: ThumbnailResolution.low,
+      ),
       builder: (context, lowSnap) {
-
-        if ( lowSnap.hasData == false || lowSnap.connectionState != ConnectionState.done) {
+        if (lowSnap.hasData == false ||
+            lowSnap.connectionState != ConnectionState.done) {
           return ShimmerPlaceholder(); // shimmer or empty
         }
 
@@ -51,10 +54,13 @@ class ProgressiveImage extends StatelessWidget {
 
             // 👆 Overlay high-res when ready
             FutureBuilder<Uint8List?>(
-              future: thumbnailProcessor.loadThumbnail(uri, resolution:  ThumbnailResolution.high),
+              future: thumbnailProcessor.loadThumbnail(
+                uri,
+                resolution: ThumbnailResolution.high,
+              ),
               builder: (context, highSnap) {
-
-                if (!highSnap.hasData || highSnap.connectionState == ConnectionState.waiting ) {
+                if (!highSnap.hasData ||
+                    highSnap.connectionState == ConnectionState.waiting) {
                   return const SizedBox.shrink(); // No overlay until ready
                 }
 
@@ -64,7 +70,7 @@ class ProgressiveImage extends StatelessWidget {
                     highSnap.data!,
                     width: width,
                     height: height,
-                    fit: BoxFit.cover
+                    fit: BoxFit.cover,
                   ),
                 );
               },

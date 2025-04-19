@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gallery_flutter/core/constants/app_dimens.dart';
+import 'package:gallery_flutter/core/constants/app_string.dart';
 import 'package:gallery_flutter/presentation/modules/permission/bloc/permission_event.dart';
 import 'package:gallery_flutter/presentation/modules/permission/bloc/permission_state.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../../../core/constants/app_assets.dart';
 import '../../../routes/router.dart';
 import '../bloc/permission_bloc.dart';
 
@@ -50,9 +52,9 @@ class _PermissionScreenState extends State<PermissionScreen>
             context: context,
             builder:
                 (_) => AlertDialog(
-                  title: const Text("Permission Required"),
+                  title: const Text(AppString.permissionRequired),
                   content: Text(
-                    "Permission is permanently denied. Please open settings to allow access.",
+                    AppString.msgPermanentlyDenied,
                     style: Theme.of(
                       context,
                     ).textTheme.bodyMedium?.copyWith(color: Colors.black38),
@@ -60,14 +62,14 @@ class _PermissionScreenState extends State<PermissionScreen>
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.pop(context),
-                      child: const Text("Cancel"),
+                      child: const Text(AppString.cancel),
                     ),
                     TextButton(
                       onPressed: () {
                         openAppSettings(); // opens system settings
                         Navigator.pop(context);
                       },
-                      child: const Text("Open Settings"),
+                      child: const Text(AppString.openSettings),
                     ),
                   ],
                 ),
@@ -85,17 +87,17 @@ class _PermissionScreenState extends State<PermissionScreen>
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SvgPicture.asset(
-                    'assets/images/ic_photos.svg',
+                    AppAssets.icPhotos,
                     width: AppDimens.dimen123,
                   ),
                   const SizedBox(height: AppDimens.space42),
                   Text(
-                    'Require Permission',
+                    AppString.requirePermission,
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   const SizedBox(height: AppDimens.space8),
                   Text(
-                    'To show your black and white photos.\nWe just need your folder permission.\nWe promise, we don’t take your photos.',
+                    AppString.msgPermission,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
@@ -106,7 +108,7 @@ class _PermissionScreenState extends State<PermissionScreen>
                       onPressed: () {
                         context.read<PermissionBloc>().add(RequestPermission());
                       },
-                      child: const Text("Grant Access"),
+                      child: const Text(AppString.grantPermission),
                     ),
                   ),
                 ],

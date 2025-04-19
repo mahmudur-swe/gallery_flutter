@@ -6,6 +6,7 @@ import 'package:gallery_flutter/presentation/modules/photos/cubit/selection_cubi
 import 'package:gallery_flutter/presentation/widgets/selectable_photo_tile.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/constants/app_string.dart';
 import '../../../../core/services/thumbnail_processor.dart';
 import '../../../../core/theme/app_button.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -27,6 +28,7 @@ class PhotoScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<PhotoBloc, PhotoState>(
       listener: (context, state) {
+        // Show error snack bar
         if (state.errorMessage != null) {
           ScaffoldMessenger.of(
             context,
@@ -34,6 +36,7 @@ class PhotoScreen extends StatelessWidget {
         }
       },
       builder: (context, state) {
+        // Use PopScope to prevent back button from popping the screen
         return PopScope(
           canPop: false,
           onPopInvokedWithResult: (didPop, result) async {
@@ -43,19 +46,17 @@ class PhotoScreen extends StatelessWidget {
             final selectedIds = context.read<SelectionCubit>().state;
 
             if (downloadState.isDownloading) {
-               await showDialog<bool>(
+              await showDialog<bool>(
                 context: context,
                 builder:
                     (internalContext) => AlertDialog(
-                      title: const Text('Cancel Download?'),
-                      content: const Text(
-                        'A download is in progress. Do you want to cancel it?',
-                      ),
+                      title: const Text(AppString.cancelDownload),
+                      content: const Text(AppString.msgDownloading),
                       actions: [
                         TextButton(
                           onPressed:
                               () => Navigator.of(internalContext).pop(true),
-                          child: const Text('No'),
+                          child: const Text(AppString.no),
                         ),
                         TextButton(
                           onPressed:
@@ -63,7 +64,7 @@ class PhotoScreen extends StatelessWidget {
                                 Navigator.of(internalContext).pop(true),
                                 context.read<DownloadCubit>().reset(),
                               },
-                          child: const Text('Yes'),
+                          child: const Text(AppString.yes),
                         ),
                       ],
                     ),
@@ -85,7 +86,7 @@ class PhotoScreen extends StatelessWidget {
             appBar: AppBar(
               centerTitle: true,
               title: Text(
-                "Photos",
+                AppString.appName,
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               leading: IconButton(
@@ -116,7 +117,7 @@ class PhotoScreen extends StatelessWidget {
                 } else if (state.photos.isEmpty) {
                   return Center(
                     child: Text(
-                      'No photos found.',
+                      AppString.msgNoPhotosFound,
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
                   );
@@ -124,7 +125,7 @@ class PhotoScreen extends StatelessWidget {
 
                 return Stack(
                   children: [
-                    // Your Grid of Images
+                    // Grid of Images
                     GridView.builder(
                       padding: const EdgeInsets.only(
                         top: AppDimens.padding12,
@@ -148,10 +149,12 @@ class PhotoScreen extends StatelessWidget {
                         return BlocSelector<SelectionCubit, Set<String>, bool>(
                           selector: (selection) => selection.contains(photo.id),
                           builder: (context, isSelected) {
+                            // Selectable photo tile to select and deselect photos
                             return SelectablePhotoTile(
                               photoId: photo.id,
                               uri: uri,
                               isSelected: isSelected,
+                              // onToggle to toggle the selection state of the photo
                               onToggle:
                                   () => context.read<SelectionCubit>().toggle(
                                     photo.id,
@@ -202,7 +205,7 @@ class PhotoScreen extends StatelessWidget {
                                     selectedPhotos,
                                   );
                                 },
-                                child: Text("Download"),
+                                child: Text(AppString.download),
                               );
                             },
                           ),
@@ -218,8 +221,8 @@ class PhotoScreen extends StatelessWidget {
 
                         var title =
                             state.isDownloading
-                                ? "Downloading..."
-                                : "Download Completed";
+                                ? AppString.downloading
+                                : AppString.downloadComplete;
 
                         return Center(
                           child: AlertDialog(
@@ -259,7 +262,7 @@ class PhotoScreen extends StatelessWidget {
                                   style: TextButton.styleFrom(
                                     foregroundColor: AppColors.primaryVariant,
                                   ),
-                                  child: const Text('Done'),
+                                  child: const Text(AppString.done),
                                 ),
                             ],
                           ),

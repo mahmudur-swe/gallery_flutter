@@ -18,7 +18,6 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       //showPerformanceOverlay: true,
-      title: 'Photos',
       theme: appTheme,
       routerConfig: appRouter,
     );

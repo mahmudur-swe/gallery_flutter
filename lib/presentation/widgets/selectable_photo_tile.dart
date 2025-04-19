@@ -1,5 +1,3 @@
-
-
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -27,18 +25,17 @@ class SelectablePhotoTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      key: ValueKey(photoId),
       onTap: onToggle,
       child: Stack(
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(
-              AppDimens.radius6,
-            ),
+            borderRadius: BorderRadius.circular(AppDimens.radius6),
             child: ImageFiltered(
               imageFilter:
-              isSelected
-                  ? ImageFilter.blur(sigmaX: 2, sigmaY: 2)
-                  : ImageFilter.blur(sigmaX: 0, sigmaY: 0),
+                  isSelected
+                      ? ImageFilter.blur(sigmaX: 2, sigmaY: 2)
+                      : ImageFilter.blur(sigmaX: 0, sigmaY: 0),
               child: ProgressiveImage(
                 uri: uri,
                 thumbnailProcessor: thumbnailProcessor,
@@ -51,7 +48,11 @@ class SelectablePhotoTile extends StatelessWidget {
             const Positioned.fill(
               child: Align(
                 alignment: Alignment.center,
-                child: Icon(Icons.check_circle, color: Colors.greenAccent, size: AppDimens.dimen22),
+                child: Icon(
+                  Icons.check_circle,
+                  color: Colors.greenAccent,
+                  size: AppDimens.dimen22,
+                ),
               ),
             ),
         ],

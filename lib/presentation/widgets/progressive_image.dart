@@ -27,7 +27,7 @@ class ProgressiveImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Uint8List?>(
-      key: ValueKey(uri),
+
       future: thumbnailProcessor.loadThumbnail(
         uri,
         resolution: ThumbnailResolution.low,

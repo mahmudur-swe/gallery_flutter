@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gallery_flutter/core/constants/app_assets.dart';
 import 'package:gallery_flutter/presentation/modules/splash/bloc/splash_bloc.dart';
 import 'package:gallery_flutter/presentation/modules/splash/bloc/splash_state.dart';
 import 'package:go_router/go_router.dart';
@@ -27,7 +28,7 @@ class SplashScreen extends StatelessWidget {
       child: Scaffold(
         body: Center(
           child: Image.asset(
-            'assets/images/gallery.png',
+            AppAssets.gallery,
             width: AppDimens.dimen130,
             height: AppDimens.dimen130,
           ),

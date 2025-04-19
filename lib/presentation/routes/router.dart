@@ -7,11 +7,11 @@ import 'package:go_router/go_router.dart';
 import '../../di/injection_container.dart';
 import '../modules/permission/bloc/permission_bloc.dart';
 import '../modules/permission/bloc/permission_event.dart';
+import '../modules/photos/bloc/photo_bloc.dart';
 import '../modules/photos/bloc/photo_event.dart';
 import '../modules/photos/cubit/download_cubit.dart';
-import '../modules/photos/bloc/photo_bloc.dart';
-import '../modules/photos/view/photo_screen.dart';
 import '../modules/photos/cubit/selection_cubit.dart';
+import '../modules/photos/view/photo_screen.dart';
 import '../modules/splash/bloc/splash_bloc.dart';
 import '../modules/splash/bloc/splash_event.dart';
 
@@ -46,7 +46,6 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.photos,
       builder: (BuildContext context, GoRouterState state) {
-
         return MultiBlocProvider(
           providers: [
             BlocProvider(create: (_) => sl<PhotoBloc>()..add(LoadPhotos())),
@@ -55,14 +54,6 @@ final GoRouter appRouter = GoRouter(
           ],
           child: PhotoScreen(thumbnailProcessor: sl()),
         );
-
-        // return BlocProvider(
-        //   // bloc injected by dependency injection
-        //   create: (_) => sl<PhotoBloc>()..add(LoadPhotos()),
-        //   child: PhotoScreen(
-        //     thumbnailProcessor: sl<ThumbnailProcessor>(),
-        //   ),
-        // );
       },
     ),
   ],

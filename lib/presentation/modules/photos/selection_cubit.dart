@@ -10,4 +10,6 @@ class SelectionCubit extends Cubit<Set<String>> {
   }
 
   bool isSelected(String id) => state.contains(id);
+
+  void reset() => emit({});
 }

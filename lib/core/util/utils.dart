@@ -10,4 +10,5 @@ class Utils {
       exit(0); // not recommended by Apple, but technically allowed
     }
   }
+
 }

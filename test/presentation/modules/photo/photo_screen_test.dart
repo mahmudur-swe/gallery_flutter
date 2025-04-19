@@ -9,18 +9,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gallery_flutter/core/services/thumbnail_processor.dart';
 import 'package:gallery_flutter/di/injection_container.dart';
 import 'package:gallery_flutter/domain/entities/photo.dart';
+import 'package:gallery_flutter/presentation/modules/photos/download_cubit.dart';
+import 'package:gallery_flutter/presentation/modules/photos/download_state.dart';
 import 'package:gallery_flutter/presentation/modules/photos/photo_bloc.dart';
 import 'package:gallery_flutter/presentation/modules/photos/photo_screen.dart';
 import 'package:gallery_flutter/presentation/modules/photos/photo_state.dart';
+import 'package:gallery_flutter/presentation/modules/photos/selection_cubit.dart';
 import 'package:mocktail/mocktail.dart';
 
-class MockPhotoBloc extends Mock implements PhotoBloc {
-
-}
-
-class MockThumbnailProcessor extends Mock implements ThumbnailProcessor {}
-
-class _TestHttpOverrides extends HttpOverrides {}
 
 final validImageBytes = Uint8List.fromList([
   0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, // PNG header
@@ -40,6 +36,21 @@ final validImageBytes = Uint8List.fromList([
   0xAE, 0x42, 0x60, 0x82
 ]);
 
+class MockPhotoBloc extends Mock implements PhotoBloc {
+
+}
+
+class MockThumbnailProcessor extends Mock implements ThumbnailProcessor {}
+
+class MockSelectionCubit extends Mock implements SelectionCubit {}
+
+class MockDownloadCubit extends Mock implements DownloadCubit {}
+
+
+class _TestHttpOverrides extends HttpOverrides {}
+
+
+
 final mockPhotos = [
   Photo(id: '1', uri: 'https://picsum.photos/id/10/200/300', name: 'Photo 1'),
   Photo(id: '2', uri: 'https://picsum.photos/id/11/200/301', name: 'Photo 2'),
@@ -47,6 +58,8 @@ final mockPhotos = [
 
 void main() {
   late MockPhotoBloc mockBloc;
+  late MockSelectionCubit mockSelectionCubit;
+  late MockDownloadCubit mockDownloadCubit;
   late MockThumbnailProcessor mockProcessor;
 
   // todo: remove this when data fetching is implemented
@@ -57,20 +70,27 @@ void main() {
   setUp(() {
     mockBloc = MockPhotoBloc();
     mockProcessor = MockThumbnailProcessor();
+    mockSelectionCubit = MockSelectionCubit();
+    mockDownloadCubit = MockDownloadCubit();
   });
 
 
 
   Widget createTestableWidget() {
     return MaterialApp(
-      home: BlocProvider<PhotoBloc>.value(
-        value: mockBloc,
+      home: MultiBlocProvider(
+        providers: [
+          BlocProvider<PhotoBloc>.value(value: mockBloc),
+          BlocProvider<SelectionCubit>.value(value: mockSelectionCubit),
+          BlocProvider<DownloadCubit>.value(value: mockDownloadCubit),
+        ],
         child:  PhotoScreen(thumbnailProcessor: mockProcessor),
       ),
     );
   }
 
   testWidgets('shows loading indicator when isLoading is true', (tester) async {
+
     when(() => mockBloc.state).thenReturn(PhotoState(isLoading: true));
     when(() => mockBloc.stream).thenAnswer((_) => Stream.value(PhotoState(isLoading: true)));
 
@@ -90,6 +110,13 @@ void main() {
   testWidgets('renders photo thumbnails when photos are present', (tester) async {
     when(() => mockBloc.state).thenReturn(PhotoState(photos: mockPhotos));
     when(() => mockBloc.stream).thenAnswer((_) => Stream.value(PhotoState(photos: mockPhotos)));
+
+    when(() => mockSelectionCubit.stream).thenAnswer((_) => Stream.value(<String>{}));
+    when(() => mockSelectionCubit.state).thenReturn(<String>{});
+
+    when(() => mockDownloadCubit.stream).thenAnswer((_) => Stream.value(const DownloadState()));
+    when(() => mockDownloadCubit.state).thenReturn(const DownloadState());
+
 
     when(() => mockProcessor.loadThumbnail(any(), resolution: ThumbnailResolution.low))
         .thenAnswer((_) async => validImageBytes);

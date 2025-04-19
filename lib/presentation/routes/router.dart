@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import '../../di/injection_container.dart';
 import '../modules/permission/permission_bloc.dart';
 import '../modules/permission/permission_event.dart';
+import '../modules/photos/download_cubit.dart';
 import '../modules/photos/photo_bloc.dart';
 import '../modules/photos/photo_event.dart';
 import '../modules/photos/photo_screen.dart';
@@ -51,6 +52,7 @@ final GoRouter appRouter = GoRouter(
           providers: [
             BlocProvider(create: (_) => sl<PhotoBloc>()..add(LoadPhotos())),
             BlocProvider(create: (_) => SelectionCubit()),
+            BlocProvider(create: (_) => DownloadCubit(sl())),
           ],
           child: PhotoScreen(thumbnailProcessor: sl()),
         );

@@ -9,6 +9,8 @@ class AppDimens {
   static const double padding24 = 24.0;
   static const double padding32 = 32.0;
   static const double padding40 = 40.0;
+  static const double padding80 = 80.0;
+  static const double padding100 = 100.0;
 
   // Margin
   static const double margin4 = 4.0;
@@ -46,6 +48,7 @@ class AppDimens {
   static const double font16 = 16.0;
   static const double font18 = 18.0;
   static const double font20 = 20.0;
+  static const double font21 = 21.0;
   static const double font22 = 22.0;
   static const double font24 = 24.0;
   static const double font26 = 26.0;

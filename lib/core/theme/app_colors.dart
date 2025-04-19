@@ -37,6 +37,8 @@ class AppColors {
   static const Color iconPrimary = textPrimary;
   static const Color iconSecondary = textSecondary;
 
+  static const Color disable = Color(0xFF676767);
+
 }
 
 

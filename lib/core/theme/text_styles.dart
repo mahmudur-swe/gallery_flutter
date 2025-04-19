@@ -75,4 +75,10 @@ class AppTextStyles {
     fontWeight: FontWeight.w500,
     color: AppColors.textSecondary,
   );
+
+  static final buttonBold = GoogleFonts.roboto(
+    fontSize: AppDimens.font21,
+    fontWeight: FontWeight.w700,
+    color: Colors.black,
+  );
 }

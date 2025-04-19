@@ -26,29 +26,28 @@ class DownloadCubit extends Cubit<DownloadState> {
     for (int i = 0; i < photos.length; i++) {
       final photo = photos[i];
 
-      final success = await savePhotoUseCase.execute(photo.name, photo.uri);
+      final success = await savePhotoUseCase.execute(photo.uri);
+
       if (success) {
         downloaded.add(photo.id);
       } else {
         failed.add(photo.id);
       }
 
-      if(state.isDownloading){
+      if (state.isDownloading) {
         emit(
           state.copyWith(
-            current: i + 1,
-            downloadedIds: downloaded,
-            failedIds: failed,
+            current: state.current + 1,
+            downloadedIds: state.downloadedIds.union(downloaded),
+            failedIds: state.failedIds.union(failed),
           ),
         );
       }
-
     }
 
-    if(state.isDownloading) {
+    if (state.isDownloading) {
       emit(state.copyWith(isDownloading: false, isComplete: true));
     }
-
   }
 
   void reset() => emit(const DownloadState());

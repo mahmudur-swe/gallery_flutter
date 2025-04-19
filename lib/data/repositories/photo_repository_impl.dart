@@ -18,4 +18,13 @@ class PhotoRepositoryImpl extends PhotoRepository {
     );
 
   }
+
+  @override
+  Future<bool> savePhoto(String uri) async {
+
+    var photoData = await _photoLocalDataSource.getFullFrameImage(uri);
+
+    return _photoLocalDataSource.savePhoto(photoData);
+
+  }
 }

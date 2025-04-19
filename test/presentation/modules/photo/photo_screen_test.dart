@@ -40,7 +40,7 @@ class MockPhotoBloc extends Mock implements PhotoBloc {
 
 }
 
-class MockThumbnailProcessor extends Mock implements ThumbnailProcessor {}
+class MockThumbnailProcessor extends Mock implements ImageProcessor {}
 
 class MockSelectionCubit extends Mock implements SelectionCubit {}
 
@@ -72,6 +72,21 @@ void main() {
     mockProcessor = MockThumbnailProcessor();
     mockSelectionCubit = MockSelectionCubit();
     mockDownloadCubit = MockDownloadCubit();
+
+    when(() => mockBloc.state).thenReturn(PhotoState(photos: mockPhotos));
+    when(() => mockBloc.stream).thenAnswer((_) => Stream.value(PhotoState(photos: mockPhotos)));
+
+    when(() => mockProcessor.loadThumbnail(any(), resolution: ThumbnailResolution.low))
+        .thenAnswer((_) async => validImageBytes);
+    when(() => mockProcessor.loadThumbnail(any(), resolution: ThumbnailResolution.high))
+        .thenAnswer((_) async => validImageBytes);
+
+    when(() => mockSelectionCubit.stream).thenAnswer((_) => Stream.value(<String>{'1'}));
+    when(() => mockSelectionCubit.state).thenReturn(<String>{'1'});
+
+    when(() => mockDownloadCubit.stream).thenAnswer((_) => Stream.value(const DownloadState()));
+    when(() => mockDownloadCubit.state).thenReturn(const DownloadState());
+
   });
 
 
@@ -108,21 +123,6 @@ void main() {
   });
 
   testWidgets('renders photo thumbnails when photos are present', (tester) async {
-    when(() => mockBloc.state).thenReturn(PhotoState(photos: mockPhotos));
-    when(() => mockBloc.stream).thenAnswer((_) => Stream.value(PhotoState(photos: mockPhotos)));
-
-    when(() => mockSelectionCubit.stream).thenAnswer((_) => Stream.value(<String>{}));
-    when(() => mockSelectionCubit.state).thenReturn(<String>{});
-
-    when(() => mockDownloadCubit.stream).thenAnswer((_) => Stream.value(const DownloadState()));
-    when(() => mockDownloadCubit.state).thenReturn(const DownloadState());
-
-
-    when(() => mockProcessor.loadThumbnail(any(), resolution: ThumbnailResolution.low))
-        .thenAnswer((_) async => validImageBytes);
-
-    when(() => mockProcessor.loadThumbnail(any(), resolution: ThumbnailResolution.high))
-        .thenAnswer((_) async => validImageBytes);
 
 
     await tester.pumpWidget(createTestableWidget());
@@ -134,6 +134,56 @@ void main() {
       expect(find.byKey(ValueKey(photo.uri)), findsOneWidget);
     }
   });
+
+  testWidgets('Download button triggers download process', (WidgetTester tester) async {
+
+
+    when(() => mockDownloadCubit.download(any())).thenAnswer((_) async {});
+
+    await tester.pumpWidget(createTestableWidget());
+
+    final downloadButton = find.byKey(Key('download_button'));
+    expect(downloadButton, findsOneWidget);
+
+    await tester.tap(downloadButton);
+    await tester.pump();
+
+    verify(() => mockDownloadCubit.download(any())).called(1);
+  });
+
+  testWidgets('Tapping on image selects it', (WidgetTester tester) async {
+
+    await tester.pumpWidget(createTestableWidget());
+
+    final imageTile = find.byKey(Key('https://picsum.photos/id/10/200/300'));
+    expect(imageTile, findsOneWidget);
+
+    await tester.tap(imageTile);
+    await tester.pump();
+
+    verify(() => mockSelectionCubit.toggle('1')).called(1);
+  });
+
+  void setUpMock() {
+    when(() => mockBloc.state).thenReturn(PhotoState(photos: mockPhotos));
+    when(() => mockBloc.stream).thenAnswer((_) => Stream.value(PhotoState(photos: mockPhotos)));
+
+    when(() => mockProcessor.loadThumbnail(any(), resolution: ThumbnailResolution.low))
+        .thenAnswer((_) async => validImageBytes);
+
+    when(() => mockProcessor.loadThumbnail(any(), resolution: ThumbnailResolution.high))
+        .thenAnswer((_) async => validImageBytes);
+
+    when(() => mockSelectionCubit.stream).thenAnswer((_) => Stream.value(<String>{'1'}));
+    when(() => mockSelectionCubit.state).thenReturn(<String>{'1'});
+
+    when(() => mockDownloadCubit.stream).thenAnswer((_) => Stream.value(const DownloadState()));
+    when(() => mockDownloadCubit.state).thenReturn(const DownloadState());
+
+    when(() => mockDownloadCubit.download(any())).thenAnswer((_) async {});
+  }
+
+
 
 }
 

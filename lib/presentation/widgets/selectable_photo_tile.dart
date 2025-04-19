@@ -13,7 +13,7 @@ class SelectablePhotoTile extends StatelessWidget {
   final String uri;
   final bool isSelected;
   final VoidCallback onToggle;
-  final ThumbnailProcessor thumbnailProcessor;
+  final ImageProcessor thumbnailProcessor;
 
   const SelectablePhotoTile({
     super.key,

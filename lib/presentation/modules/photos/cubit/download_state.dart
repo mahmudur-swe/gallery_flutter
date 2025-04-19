@@ -1,6 +1,10 @@
 
 
-class DownloadState {
+import 'package:equatable/equatable.dart';
+
+import 'package:equatable/equatable.dart';
+
+class DownloadState extends Equatable {
   final int current;
   final int total;
   final bool isDownloading;
@@ -34,4 +38,8 @@ class DownloadState {
       failedIds: failedIds ?? this.failedIds,
     );
   }
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [current, total, isDownloading, isComplete, downloadedIds, failedIds];
 }

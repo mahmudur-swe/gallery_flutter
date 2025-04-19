@@ -1,9 +1,14 @@
 
+import '../repositories/photo_repository.dart';
+
 class SavePhotoUseCase {
-  Future<bool> execute(String name, String uri) async {
 
-    await Future.delayed(const Duration(milliseconds: 600)); // simulate delay
+  final PhotoRepository _photoRepository;
 
-    return true;
+  SavePhotoUseCase(this._photoRepository);
+
+  Future<bool> execute(String uri) async {
+    //await Future.delayed(const Duration(milliseconds: 600)); // simulate delay
+    return _photoRepository.savePhoto(uri);
   }
 }

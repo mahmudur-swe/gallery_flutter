@@ -1,5 +1,7 @@
 
 
+import 'dart:typed_data';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gallery_flutter/data/datasources/photo_local_data_source.dart';
 import 'package:gallery_flutter/data/models/photo_response.dart';
@@ -57,5 +59,37 @@ void main() {
       throwsA(isA<Exception>()),
     );
     verify(() => mockDataSource.fetchPhotos()).called(1);
+  });
+
+  test('should return true when savePhoto succeeds', () async {
+    const testUri = 'path/to/photo.jpg';
+    final fakeBytes = Uint8List.fromList([0, 1, 2, 3]);
+
+    when(() => mockDataSource.getFullFrameImage(testUri))
+        .thenAnswer((_) async => fakeBytes);
+    when(() => mockDataSource.savePhoto(fakeBytes))
+        .thenAnswer((_) async => true);
+
+    final result = await repository.savePhoto(testUri);
+
+    expect(result, true);
+    verify(() => mockDataSource.getFullFrameImage(testUri)).called(1);
+    verify(() => mockDataSource.savePhoto(fakeBytes)).called(1);
+  });
+
+  test('should return false when savePhoto fails', () async {
+    const testUri = 'path/to/photo.jpg';
+    final fakeBytes = Uint8List.fromList([0, 1, 2, 3]);
+
+    when(() => mockDataSource.getFullFrameImage(testUri))
+        .thenAnswer((_) async => fakeBytes);
+    when(() => mockDataSource.savePhoto(fakeBytes))
+        .thenAnswer((_) async => false);
+
+    final result = await repository.savePhoto(testUri);
+
+    expect(result, false);
+    verify(() => mockDataSource.getFullFrameImage(testUri)).called(1);
+    verify(() => mockDataSource.savePhoto(fakeBytes)).called(1);
   });
 }

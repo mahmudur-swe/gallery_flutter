@@ -15,4 +15,21 @@ class PhotoLocalDataSource {
     final mediaList = await _photoService.fetchPhotos();
     return mediaList.map((e) => PhotoModel.fromMap(e)).toList();
   }
+
+  Future<bool> savePhoto(Uint8List? photoData) async {
+
+    if(photoData == null) {
+      return false;
+    }
+
+    final result = await _photoService.savePhoto( photoData);
+
+    return result;
+
+  }
+
+  Future<Uint8List?> getFullFrameImage(String uri) async {
+    return  _photoService.getFullFrameImage(uri);
+
+  }
 }

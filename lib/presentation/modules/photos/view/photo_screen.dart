@@ -19,7 +19,7 @@ import '../cubit/download_state.dart';
 //     });
 
 class PhotoScreen extends StatelessWidget {
-  final ThumbnailProcessor thumbnailProcessor;
+  final ImageProcessor thumbnailProcessor;
 
   const PhotoScreen({super.key, required this.thumbnailProcessor});
 
@@ -35,7 +35,7 @@ class PhotoScreen extends StatelessWidget {
       },
       builder: (context, state) {
         return PopScope(
-          canPop: true,
+          canPop: false,
           onPopInvokedWithResult: (didPop, result) async {
             if (didPop) return;
 
@@ -68,6 +68,9 @@ class PhotoScreen extends StatelessWidget {
                       ],
                     ),
               );
+            } else if (downloadState.isComplete) {
+              context.read<DownloadCubit>().reset();
+              context.read<SelectionCubit>().reset();
             } else if (selectedIds.isNotEmpty) {
               context.read<SelectionCubit>().reset();
             } else {
@@ -184,6 +187,7 @@ class PhotoScreen extends StatelessWidget {
                               }
 
                               return ElevatedButton(
+                                key: const Key('download_button'),
                                 style: AppButtonStyles.elevatedButtonSecondary,
                                 onPressed: () {
                                   final photos =

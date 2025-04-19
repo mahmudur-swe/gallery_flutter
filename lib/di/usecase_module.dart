@@ -7,5 +7,5 @@ import '../domain/usecases/save_photo_usecase.dart';
 
 void registerUseCases(GetIt sl) {
   sl.registerLazySingleton(() => GetPhotosUseCase(sl()));
-  sl.registerLazySingleton(() => SavePhotoUseCase());
+  sl.registerLazySingleton(() => SavePhotoUseCase(sl()));
 }

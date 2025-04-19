@@ -8,7 +8,7 @@ import '../../core/constants/app_dimens.dart';
 
 class ProgressiveImage extends StatelessWidget {
   final String uri;
-  final ThumbnailProcessor thumbnailProcessor;
+  final ImageProcessor thumbnailProcessor;
   final double width;
   final double height;
   final BorderRadius borderRadius;

@@ -1,11 +1,13 @@
 package com.example.gallery_flutter
 
 import android.content.ContentUris
+import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.util.Size
@@ -14,10 +16,13 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import java.io.ByteArrayOutputStream
 import androidx.core.net.toUri
+import java.io.OutputStream
 
 const val CHANNEL = "gallery_flutter/photos"
 const val GET_ALL_PHOTOS_METHOD = "getPhotos"
 const val GET_THUMBNAIL_BYTES_METHOD = "getThumbnailBytes"
+const val GET_FULL_FRAME_IMAGE_METHOD = "getFullFrameImage"
+const val SAVE_PHOTO_METHOD = "savePhoto"
 
 class MainActivity : FlutterActivity(){
 
@@ -39,6 +44,7 @@ class MainActivity : FlutterActivity(){
             } else if (call.method == GET_THUMBNAIL_BYTES_METHOD) {
                 val uri = call.argument<String>("uri") ?: ""
 
+
                 val resolution = call.argument<String>("resolution") ?: "high"
 
                 val bytes = getThumbnailBytes(this, uri, resolution)
@@ -47,7 +53,34 @@ class MainActivity : FlutterActivity(){
                 } else {
                     result.error("UNAVAILABLE", "Could not load thumbnail", null)
                 }
-            } else {
+            } else if (call.method == GET_FULL_FRAME_IMAGE_METHOD) {
+                val uri = call.argument<String>("uri") ?: ""
+                val bytes = getFullFrameImage(this, uri)
+                if (bytes != null) {
+                    result.success(bytes)
+                } else {
+                    result.error("UNAVAILABLE", "Could not load thumbnail", null)
+                }
+            }
+
+            else if (call.method == SAVE_PHOTO_METHOD) {
+
+                val imageBytes = call.argument<ByteArray>("imageBytes")
+
+                if(imageBytes == null) {
+                    result.error("UNAVAILABLE", "Could not load thumbnail", null)
+                }
+
+                try {
+                    val success = savePhoto(this, imageBytes!!)
+                    result.success(success)
+                }catch (e: Exception) {
+                    result.error("UNAVAILABLE", "Could not save photo", null)
+                }
+
+            }
+
+            else {
                 result.notImplemented()
             }
         }
@@ -93,7 +126,7 @@ fun getPhotos(
     return mediaList
 }
 
-private fun getFullImageBytes(context: Context, uriString: String): ByteArray? {
+private fun getFullFrameImage(context: Context, uriString: String): ByteArray? {
     return try {
         val uri = uriString.toUri()
         context.contentResolver.openInputStream(uri)?.use { input ->
@@ -163,5 +196,33 @@ fun decodeThumbnail(context: Context, uri: Uri, targetWidth: Int, targetHeight: 
     } catch (e: Exception) {
         null
     }
+}
+
+fun savePhoto(context: Context, imageBytes : ByteArray): Boolean {
+    val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+    val filename = "IMG_${System.currentTimeMillis()}.jpg"
+
+    val resolver = context.contentResolver
+    val contentValues = ContentValues().apply {
+        put(MediaStore.Images.Media.DISPLAY_NAME, filename)
+        put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+        }
+    }
+
+    val imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+    imageUri?.let {
+        val outputStream: OutputStream? = resolver.openOutputStream(it)
+        outputStream.use { stream ->
+            if (stream != null) {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+            }
+        }
+        return true
+    } ?: run {
+        throw Exception("Failed to save image")
+    }
+
 }
 

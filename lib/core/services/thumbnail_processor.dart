@@ -5,7 +5,7 @@ import 'package:quiver/collection.dart';
 
 import '../util/log.dart';
 
-abstract class ThumbnailProcessor {
+abstract class ImageProcessor {
   Future<Uint8List?> loadThumbnail(
     String uri, {
     ThumbnailResolution resolution = ThumbnailResolution.high,
@@ -19,7 +19,7 @@ enum ThumbnailResolution {
   high, // e.g., 300x300
 }
 
-class ThumbnailProcessorImpl implements ThumbnailProcessor {
+class ThumbnailProcessorImpl implements ImageProcessor {
   final PhotoService _photoService;
 
   ThumbnailProcessorImpl(this._photoService);

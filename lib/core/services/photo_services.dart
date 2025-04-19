@@ -25,21 +25,52 @@ class PhotoService {
     }
   }
 
-  Future<Uint8List?> getThumbnailImageBytes(String uri, {ThumbnailResolution resolution = ThumbnailResolution.high}) async {
+  Future<Uint8List?> getThumbnailImageBytes(
+    String uri, {
+    ThumbnailResolution resolution = ThumbnailResolution.high,
+  }) async {
     try {
-      final result = await _channel.invokeMethod(
-        MethodChannelConstants.getThumbnailBytesMethod,
-        {'uri': uri, 'resolution': resolution.name}
-      );
+      final result = await _channel
+          .invokeMethod(MethodChannelConstants.getThumbnailBytesMethod, {
+            MethodChannelConstants.paramUri: uri,
+            MethodChannelConstants.paramResolution: resolution.name,
+          });
 
       if (result == null) return null;
 
       return Uint8List.fromList(List<int>.from(result));
-
     } catch (e) {
       Log.error("Error loading image: $e");
       return null;
     }
   }
 
+  Future<Uint8List?> getFullFrameImage(String uri) async {
+    try {
+      final result = await _channel.invokeMethod(
+        MethodChannelConstants.getFullFrameImageMethod,
+        {MethodChannelConstants.paramUri: uri},
+      );
+
+      if (result == null) return null;
+
+      return Uint8List.fromList(List<int>.from(result));
+    } catch (e) {
+      Log.error("Error loading image: $e");
+      return null;
+    }
+  }
+
+  Future<bool> savePhoto(Uint8List byteArray) async {
+    try {
+      final result = await _channel.invokeMethod(
+        MethodChannelConstants.savePhotoMethod,
+        {MethodChannelConstants.paramImageBytes: byteArray},
+      );
+      return result;
+    } on PlatformException catch (e) {
+      Log.error("Failed to save photo: '${e.message}'.");
+      return false;
+    }
+  }
 }

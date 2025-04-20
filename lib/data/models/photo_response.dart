@@ -10,12 +10,10 @@ class PhotoResponse extends Equatable {
   @override
   List<Object?> get props => [photos];
 
-  // Convert PhotoResponse to a JSON-serializable Map
   Map<String, dynamic> toJson() => {
     "photos": photos.map((photo) => photo.toJson()).toList(),
   };
 
-  // Factory constructor to create PhotoResponse from a JSON Map
   factory PhotoResponse.fromJson(List<dynamic> json) => PhotoResponse(
     photos: json.map((photoJson) => PhotoModel.fromJson(photoJson)).toList(),
   );
@@ -31,10 +29,8 @@ class PhotoModel extends Equatable {
   @override
   List<Object?> get props => [id, uri, name];
 
-  // Convert Photo to a JSON-serializable Map
   Map<String, dynamic> toJson() => {"id": id, "uri": uri, "name": name};
 
-  // Factory constructor to create Photo from a JSON Map
   factory PhotoModel.fromJson(dynamic path) =>
       PhotoModel(id: path['id'], uri: path['uri'], name: path['name']);
 

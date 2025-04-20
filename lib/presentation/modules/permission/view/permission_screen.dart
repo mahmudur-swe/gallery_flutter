@@ -9,6 +9,7 @@ import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../core/constants/app_assets.dart';
+import '../../../../core/util/log.dart';
 import '../../../routes/router.dart';
 import '../bloc/permission_bloc.dart';
 
@@ -35,10 +36,11 @@ class _PermissionScreenState extends State<PermissionScreen>
     super.dispose();
   }
 
-  // 🔁 Triggered when app returns from background (e.g., settings)
+  // Triggered when app returns from background (e.g., settings)
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
+      Log.debug("App resumed, checking permission");
       context.read<PermissionBloc>().add(CheckPermission());
     }
   }
@@ -48,6 +50,11 @@ class _PermissionScreenState extends State<PermissionScreen>
     return BlocConsumer<PermissionBloc, PermissionState>(
       listener: (context, state) {
         if (state is PermissionPermanentlyDenied) {
+          Log.debug(
+            "Permission Permanently Denied. Displaying dialog to open app settings.",
+          );
+
+          // Permission permanently denied. Display a dialog to open app settings to grant access.
           showDialog(
             context: context,
             builder:
@@ -66,7 +73,8 @@ class _PermissionScreenState extends State<PermissionScreen>
                     ),
                     TextButton(
                       onPressed: () {
-                        openAppSettings(); // opens system settings
+                        Log.debug("Opening app settings.");
+                        openAppSettings(); // opens settings
                         Navigator.pop(context);
                       },
                       child: const Text(AppString.openSettings),
@@ -106,6 +114,7 @@ class _PermissionScreenState extends State<PermissionScreen>
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
+                        Log.debug("Requesting permission.");
                         context.read<PermissionBloc>().add(RequestPermission());
                       },
                       child: const Text(AppString.grantPermission),

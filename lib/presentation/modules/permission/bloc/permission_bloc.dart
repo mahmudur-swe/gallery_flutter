@@ -4,11 +4,9 @@ import 'package:gallery_flutter/presentation/modules/permission/bloc/permission_
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../core/services/permission_service.dart';
-
-
+import '../../../../core/util/log.dart';
 
 class PermissionBloc extends Bloc<PermissionEvent, PermissionState> {
-
   final PermissionService permissionService;
 
   PermissionBloc(this.permissionService) : super(PermissionInitial()) {
@@ -17,7 +15,6 @@ class PermissionBloc extends Bloc<PermissionEvent, PermissionState> {
 
       if (status) {
         emit(PermissionGranted());
-        // Optionally: load gallery here
       } else {
         emit(PermissionDenied());
       }
@@ -27,10 +24,13 @@ class PermissionBloc extends Bloc<PermissionEvent, PermissionState> {
       final status = await permissionService.requestMediaPermission();
 
       if (status.isGranted) {
+        Log.debug("Permission Granted");
         emit(PermissionGranted());
       } else if (status.isPermanentlyDenied) {
+        Log.debug("Permission Permanently Denied");
         emit(PermissionPermanentlyDenied());
       } else {
+        Log.debug("Permission Denied");
         emit(PermissionDenied());
       }
     });

@@ -41,7 +41,7 @@ class ProgressiveImage extends StatelessWidget {
         return Stack(
           fit: StackFit.expand,
           children: [
-            // 👇 Base low-res image
+            // Base low-res image
             ClipRRect(
               borderRadius: borderRadius,
               child: Image.memory(
@@ -52,7 +52,7 @@ class ProgressiveImage extends StatelessWidget {
               ),
             ),
 
-            // 👆 Overlay high-res when ready
+            // Overlay high-res when ready
             FutureBuilder<Uint8List?>(
               future: thumbnailProcessor.loadThumbnail(
                 uri,

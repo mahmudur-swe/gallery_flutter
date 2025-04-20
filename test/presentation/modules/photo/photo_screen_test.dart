@@ -14,6 +14,7 @@ import 'package:gallery_flutter/presentation/modules/photos/cubit/download_state
 import 'package:gallery_flutter/presentation/modules/photos/bloc/photo_bloc.dart';
 import 'package:gallery_flutter/presentation/modules/photos/view/photo_screen.dart';
 import 'package:gallery_flutter/presentation/modules/photos/cubit/selection_cubit.dart';
+import 'package:gallery_flutter/presentation/widgets/shimmer_grid.dart';
 import 'package:mocktail/mocktail.dart';
 
 
@@ -109,7 +110,7 @@ void main() {
 
 
     await tester.pumpWidget(createTestableWidget());
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    expect(find.byType(ShimmerPhotoGrid), findsOneWidget);
   });
 
   testWidgets('shows error message when errorMessage is present', (tester) async {

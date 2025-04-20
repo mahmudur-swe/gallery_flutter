@@ -160,6 +160,12 @@ import Photos
                 CGSize(width: 100, height: 100)
             }
 
+        let compressionQuality = if (resolution == "low") {
+            0.4
+        } else  {
+            0.7
+        }
+
         do {
             // Read the image data from the file
             let data = try Data(contentsOf: fileURL)
@@ -170,7 +176,7 @@ import Photos
                 let resizedImage = resizeImage(image: image, targetSize: targetSize)
 
                 // Convert the resized image to PNG data
-                if let resizedData = resizedImage.pngData() {
+                if let resizedData = resizedImage.jpegData(compressionQuality: compressionQuality) {
                     // Return the byte array (PNG data) to Flutter
                     result(FlutterStandardTypedData(bytes: resizedData))
                 } else {

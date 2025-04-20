@@ -167,7 +167,7 @@ private fun getThumbnailBytes(context: Context, uriString: String, resolution: S
 
         val quality = when (resolution) {
             "low" -> 40
-            "high" -> 90
+            "high" -> 70
             else -> 80
         }
 

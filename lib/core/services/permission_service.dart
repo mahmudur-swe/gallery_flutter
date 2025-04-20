@@ -1,20 +1,45 @@
 
+import 'dart:io';
+
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class PermissionService {
   Future<PermissionStatus> requestMediaPermission() async {
-    // return await Permission.storage.request();
 
-    if (await Permission.storage.isGranted) return PermissionStatus.granted;
+    if (Platform.isAndroid) {
+      int sdkInt = await getAndroidSdkVersion();
+      if (sdkInt <= 32) {
+        // Android 12 and below
+          return await Permission.storage.request();
+      }
+    }
 
-    if (await Permission.photos.request().isGranted) return PermissionStatus.granted;
+    return await Permission.photos.request();
 
-    if (await Permission.storage.request().isGranted) return PermissionStatus.granted;
-
-    return PermissionStatus.denied;
   }
 
   Future<bool> isMediaPermissionGranted() async {
-    return await Permission.photos.isGranted  || await Permission.storage.isGranted;
+
+    if (Platform.isAndroid) {
+      int sdkInt = await getAndroidSdkVersion();
+      if (sdkInt <= 32) {
+        // Android 12 and below
+        return await Permission.storage.isGranted;
+      }
+    }
+
+    return await Permission.photos.isGranted;
+  }
+
+  Future<int> getAndroidSdkVersion() async {
+
+    if(Platform.isAndroid == false) Exception("Device is not Android");
+
+    final deviceInfo = DeviceInfoPlugin();
+    final androidInfo = await deviceInfo.androidInfo;
+    final sdkInt = androidInfo.version.sdkInt;
+    return sdkInt;
+
   }
 }

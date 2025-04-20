@@ -51,13 +51,20 @@ class ThumbnailProcessorImpl implements ThumbnailProcessor {
   Future<void> init() async {
 
     try {
+
+      Log.debug("ThumbnailProcessor: Initializing for cache");
+
       final memoryMB = await MemoryInfoService.getTotalMemoryMB();
 
-      const double cacheFraction = 0.01; // use 1% of memory
+      const double cacheFraction = 0.01; // use 1% of total memory for cache
       final int totalCacheBytes = (memoryMB * 1024 * 1024 * cacheFraction).toInt();
 
-      const int avgLowResBytes = 1024;   // 1 KB
-      const int avgHighResBytes = 10240; // 10 KB
+      Log.debug('Device Memory: ${memoryMB}MB → App max memory Cache: ${totalCacheBytes ~/ 1024}KB');
+
+      const int avgLowResBytes = 2*1024;   // low res image size aprox 1 KB to 2 KB. Safety take 2KB
+      const int avgHighResBytes = 20*1024; // righ res image size aprox 10 KB to 20 KB. Safety take 20KB
+
+      Log.debug('Average Low Res Image: ${memoryMB}MB → Low-res cache: ${avgLowResBytes}B, High-res: ${avgHighResBytes}B');
 
       final int lowResBudget = (totalCacheBytes * 0.7).toInt();
       final int highResBudget = totalCacheBytes - lowResBudget;
@@ -65,15 +72,18 @@ class ThumbnailProcessorImpl implements ThumbnailProcessor {
       final int lowResEntries = lowResBudget ~/ avgLowResBytes;
       final int highResEntries = highResBudget ~/ avgHighResBytes;
 
-      Log.debug('Memory: ${memoryMB}MB → Cache: ${totalCacheBytes ~/ 1024}KB');
       Log.debug('Low-res cache: $lowResEntries entries, High-res: $highResEntries entries');
 
       _lowResCache = LruMap(maximumSize: Math.max(lowResEntries, 300));
       _highResCache = LruMap(maximumSize: Math.max(highResEntries, 20));
 
+      Log.debug("ThumbnailProcessor: Cache initialized successfully");
+
     } catch (e) {
       _lowResCache = LruMap(maximumSize: 300);
       _highResCache = LruMap(maximumSize: 20);
+
+      Log.error("ThumbnailProcessor: Error initializing cache: $e. Using default cache size");
     }
 
   }
@@ -91,7 +101,6 @@ class ThumbnailProcessorImpl implements ThumbnailProcessor {
     //1. Return from cache if present
     if (cache.containsKey(key)) return cache[key];
 
-
     try {
 
       // 2. Read from disk if present
@@ -100,6 +109,7 @@ class ThumbnailProcessorImpl implements ThumbnailProcessor {
       if (await diskFile.exists()) {
         final bytes = await diskFile.readAsBytes();
         cache[key] = bytes;
+
         return bytes;
       }
 
@@ -109,19 +119,12 @@ class ThumbnailProcessorImpl implements ThumbnailProcessor {
         resolution: resolution,
       );
 
-
-
     if (bytes != null) {
         cache[key] = bytes;
 
         await File(diskPath).writeAsBytes(bytes, flush: true);
 
-        // double sizeInKB = bytes.lengthInBytes / 1024;
-        //
-        // if(resolution == ThumbnailResolution.low) {
-        //   Log.debug(
-        //  1     '$resolution Thumbnail size: ${sizeInKB.toStringAsFixed(2)} KB');
-        // }
+
 
         return bytes;
       }
@@ -154,7 +157,6 @@ class ThumbnailProcessorImpl implements ThumbnailProcessor {
     if (!await folderDir.exists()) {
       await folderDir.create(recursive: true);
     }
-
     return path;
   }
 

@@ -17,10 +17,11 @@ class SplashScreen extends StatelessWidget {
     return BlocListener<SplashBloc, SplashState>(
       listener: (context, state) {
         if (state.isGranted == true) {
+          Log.debug("SplashScreen: Permission granted, navigate to photos");
           context.go(AppRoutes.photos);
         } else if (state.isGranted == false) {
           Log.debug(
-            "SplashScreen. isGranted: $state, Navigate to checkPermissions",
+            "SplashScreen: Permission denied, navigate to checkPermissions",
           );
           context.go(AppRoutes.checkPermissions);
         }

@@ -10,7 +10,9 @@ import '../../../../core/constants/app_string.dart';
 import '../../../../core/services/thumbnail_processor.dart';
 import '../../../../core/theme/app_button.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/util/log.dart';
 import '../../../../core/util/utils.dart';
+import '../../../widgets/shimmer_grid.dart';
 import '../bloc/photo_state.dart';
 import '../cubit/download_cubit.dart';
 import '../cubit/download_state.dart';
@@ -102,9 +104,11 @@ class PhotoScreen extends StatelessWidget {
             body: Builder(
               builder: (context) {
                 if (state.isLoading) {
-                  return const Center(child: CircularProgressIndicator());
+                  // show shimmer effect while loading
+                  return const Center(child: ShimmerPhotoGrid());
                 } else if (state.errorMessage != null) {
                   return Center(
+                    // Show an error message if an error occurs
                     child: Text(
                       'Error: ${state.errorMessage}',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
@@ -116,13 +120,14 @@ class PhotoScreen extends StatelessWidget {
                   );
                 } else if (state.photos.isEmpty) {
                   return Center(
+                    // Show a message if no photos are found
                     child: Text(
                       AppString.msgNoPhotosFound,
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
                   );
                 }
-
+                // else, return the grid of photos
                 return Stack(
                   children: [
                     // Grid of Images
@@ -195,12 +200,17 @@ class PhotoScreen extends StatelessWidget {
                                 onPressed: () {
                                   final photos =
                                       context.read<PhotoBloc>().state.photos;
+                                  // Get the selected photos from the current state
                                   final selectedPhotos =
                                       photos
                                           .where(
                                             (p) => selectedIds.contains(p.id),
                                           )
                                           .toList();
+                                  // Download the selected photos
+                                  Log.debug(
+                                    "PhotoScreen: Downloading selected photos",
+                                  );
                                   context.read<DownloadCubit>().download(
                                     selectedPhotos,
                                   );
@@ -256,6 +266,10 @@ class PhotoScreen extends StatelessWidget {
                               if (state.isComplete)
                                 TextButton(
                                   onPressed: () {
+                                    Log.debug(
+                                      "PhotoScreen: Resetting download and selection cubits on download complete",
+                                    );
+                                    // Reset the download and selection state when the download is complete
                                     context.read<DownloadCubit>().reset();
                                     context.read<SelectionCubit>().reset();
                                   },

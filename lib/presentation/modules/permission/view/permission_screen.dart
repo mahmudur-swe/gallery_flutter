@@ -59,7 +59,7 @@ class _PermissionScreenState extends State<PermissionScreen>
             context: context,
             builder:
                 (_) => AlertDialog(
-                  title: const Text(AppString.permissionRequired),
+                  title: const Text(AppString.requirePermission),
                   content: Text(
                     AppString.msgPermanentlyDenied,
                     style: Theme.of(

@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gallery_flutter/data/datasources/photo_local_data_source.dart';
-import 'package:gallery_flutter/data/models/photo_response.dart';
+import 'package:gallery_flutter/data/models/photo_model.dart';
 import 'package:gallery_flutter/data/repositories/photo_repository_impl.dart';
 import 'package:gallery_flutter/domain/repositories/photo_repository.dart';
 import 'package:mocktail/mocktail.dart';

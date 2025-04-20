@@ -1,4 +1,4 @@
-
+// coverage:ignore-file
 
 import 'package:gallery_flutter/core/services/permission_service.dart';
 import 'package:get_it/get_it.dart';

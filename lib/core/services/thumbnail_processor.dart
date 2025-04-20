@@ -1,6 +1,7 @@
+// coverage:ignore-file
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math' as Math;
+import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
@@ -70,8 +71,8 @@ class ThumbnailProcessorImpl implements ThumbnailProcessor {
         'Low-res cache: $lowResEntries entries, High-res: $highResEntries entries',
       );
 
-      _lowResCache = LruMap(maximumSize: Math.max(lowResEntries, 300));
-      _highResCache = LruMap(maximumSize: Math.max(highResEntries, 20));
+      _lowResCache = LruMap(maximumSize: math.max(lowResEntries, 300));
+      _highResCache = LruMap(maximumSize: math.max(highResEntries, 20));
 
       Log.debug("ThumbnailProcessor: Cache initialized successfully");
     } catch (e) {

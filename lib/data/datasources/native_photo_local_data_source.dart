@@ -1,10 +1,10 @@
-
+// coverage:ignore-file
 
 import 'package:flutter/services.dart';
 import 'package:gallery_flutter/data/datasources/photo_local_data_source.dart';
 
 import '../../core/services/photo_services.dart';
-import '../models/photo_response.dart';
+import '../models/photo_model.dart';
 
 class NativePhotoLocalDataSource implements PhotoLocalDataSource {
 

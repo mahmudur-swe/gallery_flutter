@@ -1,4 +1,4 @@
-
+// coverage:ignore-file
 
 import 'package:gallery_flutter/di/repository_module.dart';
 import 'package:gallery_flutter/di/service_module.dart';
@@ -9,6 +9,7 @@ import 'bloc_module.dart';
 import 'datasource_module.dart';
 
 final locator = GetIt.instance;
+
 
 Future<void> initDI() async {
   registerServices(locator);

@@ -1,5 +1,3 @@
-import 'package:gallery_flutter/data/models/photo_response.dart';
-
 import '../../domain/entities/photo.dart';
 import '../../domain/repositories/photo_repository.dart';
 import '../datasources/photo_local_data_source.dart';

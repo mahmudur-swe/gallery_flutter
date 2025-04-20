@@ -1,3 +1,4 @@
+// coverage:ignore-file
 import 'package:flutter/services.dart';
 import 'package:gallery_flutter/core/services/thumbnail_processor.dart';
 

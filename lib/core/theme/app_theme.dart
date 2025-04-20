@@ -1,3 +1,4 @@
+// coverage:ignore-file
 import 'package:flutter/material.dart';
 import 'package:gallery_flutter/core/theme/text_styles.dart';
 

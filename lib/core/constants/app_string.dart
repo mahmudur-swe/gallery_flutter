@@ -6,7 +6,6 @@ class AppString {
 
   static const String permissionDenied = 'Permission Denied';
   static const String requirePermission = 'Require Permission';
-  static const String permissionRequired = 'Permission Required';
   static const String grantPermission = 'Grant Permission';
   static const String goToSettings = 'Go to Settings';
   static const String ok = 'OK';

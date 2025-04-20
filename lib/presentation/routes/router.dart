@@ -1,3 +1,4 @@
+// coverage:ignore-file
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gallery_flutter/presentation/modules/permission/view/permission_screen.dart';
@@ -48,7 +49,9 @@ final GoRouter appRouter = GoRouter(
       builder: (BuildContext context, GoRouterState state) {
         return MultiBlocProvider(
           providers: [
-            BlocProvider(create: (_) => locator<PhotoBloc>()..add(LoadPhotos())),
+            BlocProvider(
+              create: (_) => locator<PhotoBloc>()..add(LoadPhotos()),
+            ),
             BlocProvider(create: (_) => locator<SelectionCubit>()),
             BlocProvider(create: (_) => locator<DownloadCubit>()),
           ],

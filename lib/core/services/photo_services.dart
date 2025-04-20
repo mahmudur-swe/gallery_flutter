@@ -10,6 +10,7 @@ class PhotoService {
     MethodChannelConstants.photoChannel,
   );
 
+  /// Method to fetch all photos from the native platform
   Future<List<Map<String, dynamic>>> fetchPhotos() async {
     try {
       final List<dynamic> photoLists = await _channel.invokeMethod(
@@ -26,6 +27,7 @@ class PhotoService {
     }
   }
 
+  /// Method to fetch thumbnail bytes from the native platform
   Future<Uint8List?> getThumbnailImageBytes(
     String uri, {
     ThumbnailResolution resolution = ThumbnailResolution.high,
@@ -46,6 +48,7 @@ class PhotoService {
     }
   }
 
+  /// Method to fetch full frame image from the native platform
   Future<Uint8List?> getFullFrameImage(String uri) async {
     try {
       final result = await _channel.invokeMethod(
@@ -62,6 +65,7 @@ class PhotoService {
     }
   }
 
+  /// Method to save photo to the gallery
   Future<bool> savePhoto(Uint8List byteArray) async {
     try {
       final result = await _channel.invokeMethod(

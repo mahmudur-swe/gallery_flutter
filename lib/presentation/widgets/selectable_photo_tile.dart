@@ -47,7 +47,7 @@ class SelectablePhotoTile extends StatelessWidget {
             ),
           ),
           if (isSelected)
-            /// Show checkmark when selected
+            /// Show tick mark when selected
             const Positioned.fill(
               child: Align(
                 alignment: Alignment.center,

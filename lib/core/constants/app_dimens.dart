@@ -1,5 +1,5 @@
 class AppDimens {
-  // Padding
+  /// Padding
   static const double padding2 = 2.0;
   static const double padding4 = 4.0;
   static const double padding8 = 8.0;
@@ -12,13 +12,13 @@ class AppDimens {
   static const double padding80 = 80.0;
   static const double padding100 = 100.0;
 
-  // Margin
+  /// Margin
   static const double margin4 = 4.0;
   static const double margin8 = 8.0;
   static const double margin16 = 16.0;
   static const double margin24 = 24.0;
 
-  // Spacing / Gaps
+  /// Spacing / Gaps
   static const double space2 = 2.0;
   static const double space4 = 4.0;
   static const double space6 = 6.0;
@@ -31,7 +31,7 @@ class AppDimens {
   static const double space40 = 40.0;
   static const double space42 = 48.0;
 
-  // Border Radius
+  /// Border Radius
   static const double radius4 = 4.0;
   static const double radius6 = 6.0;
   static const double radius8 = 8.0;
@@ -40,7 +40,7 @@ class AppDimens {
   static const double radius24 = 24.0;
   static const double radius32 = 32.0;
 
-  // Font Sizes
+  /// Font Sizes
   static const double font10 = 10.0;
   static const double font11 = 11.0;
   static const double font12 = 12.0;
@@ -55,15 +55,15 @@ class AppDimens {
   static const double font28 = 28.0;
   static const double font32 = 32.0;
 
-  // Button Heights
+  /// Button Heights
   static const double buttonHeight = 48.0;
 
-  // Icon Sizes
+  /// Icon Sizes
   static const double iconSmall = 16.0;
   static const double iconMedium = 24.0;
   static const double iconLarge = 32.0;
 
-  // Dimens for Photos Screen
+  /// Dimens
   static const double dimen8 = 8.0;
   static const double dimen10 = 10.0;
   static const double dimen12 = 12.0;

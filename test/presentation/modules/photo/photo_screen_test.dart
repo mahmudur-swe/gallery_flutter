@@ -17,15 +17,15 @@ import 'package:gallery_flutter/presentation/widgets/shimmer_grid.dart';
 import 'package:mocktail/mocktail.dart';
 
 final validImageBytes = Uint8List.fromList([
-  0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, // PNG header
+  0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A,
   0x00, 0x00, 0x00, 0x0D,
-  0x49, 0x48, 0x44, 0x52, // IHDR chunk
-  0x00, 0x00, 0x00, 0x01, // width: 1
-  0x00, 0x00, 0x00, 0x01, // height: 1
+  0x49, 0x48, 0x44, 0x52,
+  0x00, 0x00, 0x00, 0x01,
+  0x00, 0x00, 0x00, 0x01,
   0x08, 0x06, 0x00, 0x00, 0x00,
   0x1F, 0x15, 0xC4, 0x89,
   0x00, 0x00, 0x00, 0x0A,
-  0x49, 0x44, 0x41, 0x54, // IDAT chunk
+  0x49, 0x44, 0x41, 0x54,
   0x78, 0x9C, 0x63, 0x00,
   0x01, 0x00, 0x00, 0x05, 0x00, 0x01,
   0x0D, 0x0A, 0x2D, 0xB4,
@@ -57,7 +57,7 @@ void main() {
 
   setUpAll(() {
     HttpOverrides.global =
-        _TestHttpOverrides(); // ✅ Prevent network image errors
+        _TestHttpOverrides(); // Prevent network image errors
   });
 
   setUp(() {
@@ -176,7 +176,6 @@ void main() {
   testWidgets('Displays download dialog when isDownloading', (
     WidgetTester tester,
   ) async {
-    // Create a mock DownloadCubit
 
     when(
       () => mockDownloadCubit.stream,
@@ -187,13 +186,11 @@ void main() {
 
     await tester.pumpWidget(createTestableWidget());
 
-    // Trigger a frame
+
     await tester.pump();
 
-    // Verify that the AlertDialog is displayed
     expect(find.byType(AlertDialog), findsOneWidget);
 
-    // Verify that the title is 'Downloading'
     expect(find.text(AppString.downloading), findsOneWidget);
 
     expect(find.byType(LinearProgressIndicator), findsOneWidget);
@@ -202,9 +199,7 @@ void main() {
   testWidgets('Displays show dialog correctly when download is complete', (
     WidgetTester tester,
   ) async {
-    // Create a mock DownloadCubit
 
-    // Emit a state where isDownloading is true
     when(
       () => mockDownloadCubit.stream,
     ).thenAnswer((_) => Stream.value(const DownloadState(isComplete: true)));
@@ -213,7 +208,6 @@ void main() {
     ).thenReturn(const DownloadState(isComplete: true));
 
     // Build the widget tree with the BlocProvider
-
     await tester.pumpWidget(createTestableWidget());
 
     // Trigger a frame

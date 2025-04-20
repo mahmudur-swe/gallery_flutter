@@ -15,7 +15,7 @@ class PhotoBloc extends Bloc<PhotoEvent, PhotoState> {
 
       try {
         Log.debug("PhotoBloc: Loading photos");
-        // Call the photo use case to get the photos
+        /// Call the photo use case to get the photos
         final photos = await getPhotosUseCase.execute();
         emit(
           state.copyWith(isLoading: false, errorMessage: null, photos: photos),

@@ -17,10 +17,6 @@ import '../bloc/photo_state.dart';
 import '../cubit/download_cubit.dart';
 import '../cubit/download_state.dart';
 
-//  WidgetsBinding.instance.addPostFrameCallback((_) {
-//       context.read<PhotoBloc>().add(LoadPhotos(albumId));
-//     });
-
 class PhotoScreen extends StatelessWidget {
   final ThumbnailProcessor thumbnailProcessor;
 
@@ -30,7 +26,7 @@ class PhotoScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<PhotoBloc, PhotoState>(
       listener: (context, state) {
-        // Show error snack bar
+        /// Show error snack bar
         if (state.errorMessage != null) {
           ScaffoldMessenger.of(
             context,
@@ -38,7 +34,7 @@ class PhotoScreen extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        // Use PopScope to prevent back button from popping the screen
+        /// Use PopScope to prevent back button from popping the screen
         return PopScope(
           canPop: false,
           onPopInvokedWithResult: (didPop, result) async {
@@ -93,22 +89,17 @@ class PhotoScreen extends StatelessWidget {
               ),
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back_ios),
-                // or use any custom icon
-                onPressed:
-                    () => {
-                      Navigator.of(context).maybePop(),
-                      //if (context.canPop()) context.pop() else Utils.exitApp(),
-                    },
+                onPressed: () => {Navigator.of(context).maybePop()},
               ),
             ),
             body: Builder(
               builder: (context) {
                 if (state.isLoading) {
-                  // show shimmer effect while loading
+                  /// show shimmer effect while loading
                   return const Center(child: ShimmerPhotoGrid());
                 } else if (state.errorMessage != null) {
                   return Center(
-                    // Show an error message if an error occurs
+                    /// Show an error message if an error occurs
                     child: Text(
                       'Error: ${state.errorMessage}',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
@@ -120,17 +111,18 @@ class PhotoScreen extends StatelessWidget {
                   );
                 } else if (state.photos.isEmpty) {
                   return Center(
-                    // Show a message if no photos are found
+                    /// Show a message if no photos are found
                     child: Text(
                       AppString.msgNoPhotosFound,
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
                   );
                 }
-                // else, return the grid of photos
+
+                /// else, return the grid of photos
                 return Stack(
                   children: [
-                    // Grid of Images
+                    /// Grid of Images
                     GridView.builder(
                       padding: const EdgeInsets.only(
                         top: AppDimens.padding12,
@@ -171,7 +163,7 @@ class PhotoScreen extends StatelessWidget {
                       },
                     ),
 
-                    //Download Button Overlay
+                    ///Download Button Overlay
                     BlocBuilder<SelectionCubit, Set<String>>(
                       builder: (context, selectedIds) {
                         if (selectedIds.isEmpty) return const SizedBox.shrink();
@@ -207,7 +199,8 @@ class PhotoScreen extends StatelessWidget {
                                             (p) => selectedIds.contains(p.id),
                                           )
                                           .toList();
-                                  // Download the selected photos
+
+                                  /// Download the selected photos
                                   Log.debug(
                                     "PhotoScreen: Downloading selected photos",
                                   );
@@ -269,7 +262,8 @@ class PhotoScreen extends StatelessWidget {
                                     Log.debug(
                                       "PhotoScreen: Resetting download and selection cubits on download complete",
                                     );
-                                    // Reset the download and selection state when the download is complete
+
+                                    /// Reset the download and selection state when the download is complete
                                     context.read<DownloadCubit>().reset();
                                     context.read<SelectionCubit>().reset();
                                   },

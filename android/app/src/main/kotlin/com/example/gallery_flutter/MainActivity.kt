@@ -35,6 +35,7 @@ class MainActivity : FlutterActivity() {
 
         super.configureFlutterEngine(flutterEngine)
 
+        /** Method channel to get total memory **/
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CONFIG_CHANNEL)
             .setMethodCallHandler { call, result ->
                 if (call.method == GET_TOTAL_MEMORY_METHOD) {
@@ -48,7 +49,7 @@ class MainActivity : FlutterActivity() {
                     result.notImplemented()
                 }
             }
-
+        /** Method channel to for fetching photos **/
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
             PHOTO_CHANNEL
@@ -56,6 +57,7 @@ class MainActivity : FlutterActivity() {
 
             if (call.method == GET_ALL_PHOTOS_METHOD) {
 
+                /** Get all photos from the native platform **/
                 val photoList = getPhotos(this)
 
                 result.success(photoList)
@@ -63,24 +65,32 @@ class MainActivity : FlutterActivity() {
             } else if (call.method == GET_THUMBNAIL_BYTES_METHOD) {
                 val uri = call.argument<String>("uri") ?: ""
 
-
                 val resolution = call.argument<String>("resolution") ?: "high"
 
+                /** Get thumbnail bytes from the native platform for low and high resolution **/
                 val bytes = getThumbnailBytes(this, uri, resolution)
+
                 if (bytes != null) {
                     result.success(bytes)
                 } else {
                     result.error("UNAVAILABLE", "Could not load thumbnail", null)
                 }
+
             } else if (call.method == GET_FULL_FRAME_IMAGE_METHOD) {
                 val uri = call.argument<String>("uri") ?: ""
+
+                /** Get full frame image from the native platform **/
                 val bytes = getFullFrameImage(this, uri)
+
                 if (bytes != null) {
                     result.success(bytes)
                 } else {
                     result.error("UNAVAILABLE", "Could not load thumbnail", null)
                 }
+
             } else if (call.method == SAVE_PHOTO_METHOD) {
+
+                /** Save photo to the gallery. Receives the image bytes **/
 
                 val imageBytes = call.argument<ByteArray>("imageBytes")
 
@@ -104,6 +114,7 @@ class MainActivity : FlutterActivity() {
 
 }
 
+/** Get all photos from the gallery **/
 fun getPhotos(
     context: Context
 ): List<Map<String, Any?>> {
@@ -143,6 +154,7 @@ fun getPhotos(
     return mediaList
 }
 
+/** Get full frame image from the gallery **/
 private fun getFullFrameImage(context: Context, uriString: String): ByteArray? {
     return try {
         val uri = uriString.toUri()
@@ -156,29 +168,36 @@ private fun getFullFrameImage(context: Context, uriString: String): ByteArray? {
 }
 
 
+/** Get thumbnail bytes from the gallery **/
 private fun getThumbnailBytes(context: Context, uriString: String, resolution: String): ByteArray? {
     return try {
 
+        /** Size for low and high resolution **/
         val targetSize = when (resolution) {
-            "low" -> Size(25, 25)
-            "high" -> Size(300, 300)
-            else -> Size(100, 100)
+            "low" -> Size(25, 25) // 25x25 for low resolution
+            "high" -> Size(300, 300) // 300x300 for high resolution
+            else -> Size(100, 100) // 100x100 for other
         }
 
+        /** Quality for low and high resolution **/
         val quality = when (resolution) {
-            "low" -> 40
-            "high" -> 70
+            "low" -> 40 // 40% quality for low resolution
+            "high" -> 70 // 70% quality for high resolution
             else -> 80
         }
 
         val uri = uriString.toUri()
 
         val bitmap = when {
+
+
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q -> {
+                /** Use loadThumbnail for Android 10+ **/
                 context.contentResolver.loadThumbnail(uri, targetSize, null)
             }
 
             else -> {
+                /** Use decodeThumbnail for Android 9 and below **/
                 decodeThumbnail(context, uri, targetSize.width, targetSize.height)
             }
         }
@@ -192,6 +211,7 @@ private fun getThumbnailBytes(context: Context, uriString: String, resolution: S
 }
 
 
+/** Decode thumbnail from the gallery **/
 fun decodeThumbnail(context: Context, uri: Uri, targetWidth: Int, targetHeight: Int): Bitmap? {
     return try {
         val inputStream = context.contentResolver.openInputStream(uri)
@@ -218,8 +238,11 @@ fun decodeThumbnail(context: Context, uri: Uri, targetWidth: Int, targetHeight: 
     }
 }
 
+/** Save photo to the gallery **/
 fun savePhoto(context: Context, imageBytes: ByteArray): Boolean {
     val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+
+    /** Filename for the photo **/
     val filename = "IMG_${System.currentTimeMillis()}.jpg"
 
     val resolver = context.contentResolver
@@ -236,6 +259,7 @@ fun savePhoto(context: Context, imageBytes: ByteArray): Boolean {
         val outputStream: OutputStream? = resolver.openOutputStream(it)
         outputStream.use { stream ->
             if (stream != null) {
+                /** Compress the bitmap to JPEG **/
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
             }
         }

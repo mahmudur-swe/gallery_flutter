@@ -12,6 +12,9 @@ import 'package:quiver/collection.dart';
 import '../util/log.dart';
 import 'memory_service.dart';
 
+const int lowResEntriesDefault = 400; /// ~400KB for low res
+const int highResEntriesDefault = 40; /// ~400KB for high res
+
 abstract class ThumbnailProcessor {
   Future<Uint8List?> loadThumbnail(
     String uri, {
@@ -43,7 +46,7 @@ class ThumbnailProcessorImpl implements ThumbnailProcessor {
 
       final memoryMB = await MemoryInfoService.getTotalMemoryMB();
 
-      const double cacheFraction = 0.01; // use 1% of total memory for cache
+      const double cacheFraction = 0.01; /// use 1% of total memory for cache
       final int totalCacheBytes =
           (memoryMB * 1024 * 1024 * cacheFraction).toInt();
 
@@ -61,23 +64,27 @@ class ThumbnailProcessorImpl implements ThumbnailProcessor {
         'Average Low Res Image: ${memoryMB}MB → Low-res cache: ${avgLowResBytes}B, High-res: ${avgHighResBytes}B',
       );
 
-      final int lowResBudget = (totalCacheBytes * 0.7).toInt();
-      final int highResBudget = totalCacheBytes - lowResBudget;
+      final int lowResBudget = (totalCacheBytes * 0.6).toInt(); /// 60% of total cache for low res
+      final int highResBudget = totalCacheBytes - lowResBudget; /// remaining for high res
 
       final int lowResEntries = lowResBudget ~/ avgLowResBytes;
       final int highResEntries = highResBudget ~/ avgHighResBytes;
 
+      /// logged how many entries are used for each cache
       Log.debug(
         'Low-res cache: $lowResEntries entries, High-res: $highResEntries entries',
       );
 
-      _lowResCache = LruMap(maximumSize: math.max(lowResEntries, 300));
-      _highResCache = LruMap(maximumSize: math.max(highResEntries, 20));
+      /// Initialize the caches with the calculated values
+      _lowResCache = LruMap(maximumSize: math.max(lowResEntries, lowResEntriesDefault));
+      _highResCache = LruMap(maximumSize: math.max(highResEntries, highResEntriesDefault));
 
       Log.debug("ThumbnailProcessor: Cache initialized successfully");
     } catch (e) {
-      _lowResCache = LruMap(maximumSize: 300);
-      _highResCache = LruMap(maximumSize: 20);
+
+      /// Initialize the caches with the default values if an error occurs
+      _lowResCache = LruMap(maximumSize: lowResEntriesDefault);
+      _highResCache = LruMap(maximumSize: highResEntriesDefault);
 
       Log.error(
         "ThumbnailProcessor: Error initializing cache: $e. Using default cache size",

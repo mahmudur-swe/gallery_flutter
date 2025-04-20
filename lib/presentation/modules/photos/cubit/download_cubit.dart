@@ -15,7 +15,7 @@ class DownloadCubit extends Cubit<DownloadState> {
     final failed = <String>{};
 
     Log.debug("DownloadCubit: Download started");
-    // set the state to downloading
+    /// set the state to downloading
     emit(
       state.copyWith(
         isDownloading: true,
@@ -29,7 +29,7 @@ class DownloadCubit extends Cubit<DownloadState> {
     for (int i = 0; i < photos.length; i++) {
       final photo = photos[i];
 
-      // Download the photo
+      /// Download the photo
       Log.debug("DownloadCubit: Downloading photo [ID: $photo.id]");
       final success = await savePhotoUseCase.execute(photo.uri);
 
@@ -41,7 +41,7 @@ class DownloadCubit extends Cubit<DownloadState> {
         failed.add(photo.id);
       }
 
-      // Update the state only if the download is still in progress
+      /// Update the state only if the download is still in progress
       if (state.isDownloading) {
         emit(
           state.copyWith(
@@ -53,7 +53,7 @@ class DownloadCubit extends Cubit<DownloadState> {
       }
     }
 
-    // If the download is still in progress, update the state
+    /// If the download is still in progress, update the state
     if (state.isDownloading) {
       Log.debug("DownloadCubit: Download complete");
       emit(state.copyWith(isDownloading: false, isComplete: true));

@@ -12,6 +12,7 @@ import Photos
 
         let controller = window?.rootViewController as! FlutterViewController
 
+        /** Method channel to get total memory **/
         let configChannel = FlutterMethodChannel(
             name: "gallery_flutter/config", binaryMessenger: controller.binaryMessenger)
 
@@ -24,6 +25,7 @@ import Photos
             }
         }
 
+        /** Method channel to for photos **/
         let photoChannel = FlutterMethodChannel(
             name: "gallery_flutter/photos", binaryMessenger: controller.binaryMessenger)
 
@@ -32,8 +34,11 @@ import Photos
 
             case "getPhotos":
 
+                /** Get all photos from the native platform **/
                 self.getPhotos(result: result)
+
             case "getThumbnailBytes":
+
                 guard let args = call.arguments as? [String: Any],
                     let assetId = args["uri"] as? String,
                     let resolution = args["resolution"] as? String
@@ -43,6 +48,8 @@ import Photos
                     )
                     return
                 }
+
+                /** Get thumbnail bytes from the native platform for low and high resolution **/
                 self.getThumbnailFromFilePath(
                     assetId: assetId, resolution: resolution, result: result)
 
@@ -55,12 +62,15 @@ import Photos
                     )
                     return
                 }
+
+                /** Get full frame image from the native platform **/
                 self.getFullFrameImage(assetId: assetId, result: result)
 
             case "savePhoto":
                 if let args = call.arguments as? [String: Any],
                     let imageBytes = args["imageBytes"] as? FlutterStandardTypedData
                 {
+                    /** Save photo to the gallery. Receives the image bytes **/
                     self.saveImageToGallery(data: imageBytes.data, result: result)
                 } else {
                     result(
@@ -79,6 +89,7 @@ import Photos
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
 
+    /** Get all photos from the gallery **/
     func getPhotos(result: @escaping FlutterResult) {
 
         var photoListList = [[String: Any]]()
@@ -101,7 +112,6 @@ import Photos
             requestOptions.isSynchronous = true  // We are making this synchronous to ensure that the results are returned immediately
             requestOptions.deliveryMode = .highQualityFormat
 
-            // Iterate over each asset in the album
             assets.enumerateObjects { (asset, _, _) in
                 // Request image data for the asset
                 imageManager.requestImageData(for: asset, options: requestOptions) {
@@ -116,7 +126,7 @@ import Photos
                         if FileManager.default.createFile(
                             atPath: filePath, contents: data, attributes: nil)
                         {
-                            // Add media data with the file path (URI) to the list
+                            // Add data with the file path (URI) to the list
                             photoListList.append([
                                 "id": asset.localIdentifier,
                                 "name": asset.value(forKey: "filename") as? String ?? "Unknown",
@@ -131,6 +141,7 @@ import Photos
         }
     }
 
+    /** Get full frame image from the gallery **/
     func getFullFrameImage(assetId: String, result: @escaping FlutterResult) {
         let fileURL = URL(fileURLWithPath: assetId)
 
@@ -146,11 +157,13 @@ import Photos
         }
     }
 
+    /** Get thumbnail bytes from the gallery **/
     func getThumbnailFromFilePath(
         assetId: String, resolution: String, result: @escaping FlutterResult
     ) {
         let fileURL = URL(fileURLWithPath: assetId)
 
+        /** Size for low and high resolution **/
         let targetSize =
             if (resolution == "low") {
                 CGSize(width: 25, height: 25)
@@ -160,11 +173,13 @@ import Photos
                 CGSize(width: 100, height: 100)
             }
 
-        let compressionQuality = if (resolution == "low") {
-            0.4
-        } else  {
-            0.7
-        }
+        /** Quality for low and high resolution **/
+        let compressionQuality =
+            if (resolution == "low") {
+                0.4
+            } else {
+                0.7
+            }
 
         do {
             // Read the image data from the file
@@ -175,12 +190,12 @@ import Photos
                 // Resize the image to 100x100
                 let resizedImage = resizeImage(image: image, targetSize: targetSize)
 
-                // Convert the resized image to PNG data
+                // Convert the resized image to JPEG data
                 if let resizedData = resizedImage.jpegData(compressionQuality: compressionQuality) {
-                    // Return the byte array (PNG data) to Flutter
+                    // Return the byte array (JPEG data) to Flutter
                     result(FlutterStandardTypedData(bytes: resizedData))
                 } else {
-                    print("Error: Could not convert resized image to PNG data.")
+                    print("Error: Could not convert resized image to JPEG data.")
                     result(nil)
                 }
             } else {
@@ -214,6 +229,7 @@ import Photos
         return resizedImage ?? image  // Return the resized image or original if resizing fails
     }
 
+    /** Save photo to the gallery **/
     private func saveImageToGallery(data: Data, result: @escaping FlutterResult) {
         guard let image = UIImage(data: data) else {
             result(

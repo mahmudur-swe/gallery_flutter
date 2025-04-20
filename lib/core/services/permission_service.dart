@@ -34,7 +34,7 @@ class PermissionService {
 
   Future<int> getAndroidSdkVersion() async {
 
-    if(Platform.isAndroid == false) Exception("Device is not Android");
+    if(Platform.isAndroid == false) Exception("This method is only available for Android devices");
 
     final deviceInfo = DeviceInfoPlugin();
     final androidInfo = await deviceInfo.androidInfo;

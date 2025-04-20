@@ -27,7 +27,7 @@ final GoRouter appRouter = GoRouter(
       path: '/',
       builder: (BuildContext context, GoRouterState state) {
         return BlocProvider(
-          create: (_) => sl<SplashBloc>()..add(SplashCheckPermission()),
+          create: (_) => locator<SplashBloc>()..add(SplashCheckPermission()),
           child: const SplashScreen(),
         );
       },
@@ -37,7 +37,7 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutes.checkPermissions,
       builder: (BuildContext context, GoRouterState state) {
         return BlocProvider(
-          create: (_) => sl<PermissionBloc>()..add(CheckPermission()),
+          create: (_) => locator<PermissionBloc>()..add(CheckPermission()),
           child: const PermissionScreen(),
         );
       },
@@ -48,11 +48,11 @@ final GoRouter appRouter = GoRouter(
       builder: (BuildContext context, GoRouterState state) {
         return MultiBlocProvider(
           providers: [
-            BlocProvider(create: (_) => sl<PhotoBloc>()..add(LoadPhotos())),
-            BlocProvider(create: (_) => SelectionCubit()),
-            BlocProvider(create: (_) => DownloadCubit(sl())),
+            BlocProvider(create: (_) => locator<PhotoBloc>()..add(LoadPhotos())),
+            BlocProvider(create: (_) => locator<SelectionCubit>()),
+            BlocProvider(create: (_) => locator<DownloadCubit>()),
           ],
-          child: PhotoScreen(thumbnailProcessor: sl()),
+          child: PhotoScreen(thumbnailProcessor: locator()),
         );
       },
     ),

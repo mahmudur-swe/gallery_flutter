@@ -33,11 +33,13 @@ class SelectablePhotoTile extends StatelessWidget {
             borderRadius: BorderRadius.circular(AppDimens.radius6),
             child: ImageFiltered(
               imageFilter:
+                  /// Blur filter is applied to selected photos
                   isSelected
                       ? ImageFilter.blur(sigmaX: 2, sigmaY: 2)
                       : ImageFilter.blur(sigmaX: 0, sigmaY: 0),
               child: ProgressiveImage(
                 uri: uri,
+                /// thumbnail processor is used to load thumbnails from cache/disk or from native platform
                 thumbnailProcessor: thumbnailProcessor,
                 width: double.infinity,
                 height: double.infinity,
@@ -45,6 +47,7 @@ class SelectablePhotoTile extends StatelessWidget {
             ),
           ),
           if (isSelected)
+            /// Show checkmark when selected
             const Positioned.fill(
               child: Align(
                 alignment: Alignment.center,

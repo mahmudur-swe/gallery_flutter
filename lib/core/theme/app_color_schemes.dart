@@ -14,9 +14,6 @@ class AppColorScheme {
     onSecondary: AppColors.onSecondary,
     secondaryContainer: AppColors.secondaryVariant,
 
-    // background: AppColors.background,
-    // onBackground: AppColors.textPrimary,
-
     surface: AppColors.surface,
     onSurface: AppColors.textPrimary,
 

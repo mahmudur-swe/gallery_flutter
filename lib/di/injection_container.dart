@@ -8,12 +8,12 @@ import 'package:get_it/get_it.dart';
 import 'bloc_module.dart';
 import 'datasource_module.dart';
 
-final sl = GetIt.instance;
+final locator = GetIt.instance;
 
 Future<void> initDI() async {
-  registerServices(sl);
-  registerDataSource(sl);
-  registerRepositories(sl);
-  registerUseCases(sl);
-  registerBlocs(sl);
+  registerServices(locator);
+  registerDataSource(locator);
+  registerRepositories(locator);
+  registerUseCases(locator);
+  registerBlocs(locator);
 }

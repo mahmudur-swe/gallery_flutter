@@ -17,7 +17,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      //showPerformanceOverlay: true,
+      //showPerformanceOverlay: true, // uncomment to show performance overlay
       theme: appTheme,
       routerConfig: appRouter,
     );

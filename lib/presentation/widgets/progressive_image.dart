@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:gallery_flutter/core/services/thumbnail_processor.dart';
 import 'package:gallery_flutter/presentation/widgets/placeholder.dart';
 
@@ -28,6 +28,7 @@ class ProgressiveImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return FutureBuilder<Uint8List?>(
 
+      /// Loading low resolution image from cache/disk or from native platform
       future: thumbnailProcessor.loadThumbnail(
         uri,
         resolution: ThumbnailResolution.low,
@@ -41,9 +42,18 @@ class ProgressiveImage extends StatelessWidget {
         return Stack(
           fit: StackFit.expand,
           children: [
-            // Base low-res image
+
+            /// show this container before the low-res image is loaded
+            Container(
+              width: width,
+              height: height,
+              color: Colors.grey.shade300, // Placeholder color while loading
+            ),
+
+            /// Load low resolution image from cache/disk or from native platform
             ClipRRect(
               borderRadius: borderRadius,
+
               child: Image.memory(
                 lowSnap.data!,
                 width: width,
@@ -52,8 +62,10 @@ class ProgressiveImage extends StatelessWidget {
               ),
             ),
 
-            // Overlay high-res when ready
+            /// Overlay high resolution when ready
             FutureBuilder<Uint8List?>(
+
+              /// Loading high resolution image from cache/disk or from native platform
               future: thumbnailProcessor.loadThumbnail(
                 uri,
                 resolution: ThumbnailResolution.high,

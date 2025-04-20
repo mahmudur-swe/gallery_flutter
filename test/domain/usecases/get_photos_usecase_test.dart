@@ -42,10 +42,10 @@ void main() {
   });
 
   test('should throw exception when repository fails', () async {
-    // Arrange
+
     when(() => mockRepository.getPhotos()).thenThrow(Exception('repo failed'));
 
-    // Act & Assert
+
     expect(
           () async => await useCase.execute(),
       throwsA(isA<Exception>()),
